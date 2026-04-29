@@ -1,0 +1,19 @@
+# LaTeX segédfájlok, amiket NEM pusholunk
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.lof
+*.log
+*.lot
+*.out
+*.run.xml
+*.synctex.gz
+*.toc
+*.pdf
+
+# TeXstudio specifikus fájlok
+*.txss
+*.bak

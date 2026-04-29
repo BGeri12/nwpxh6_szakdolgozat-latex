@@ -1,0 +1,283 @@
+\section{SPECIFIKÁCIÓ}\label{specifikuxe1ciuxf3}
+
+\subsection{Program funkciói}\label{program-funkciuxf3i}
+\subsubsection{\texorpdfstring{ Program célja}{ Program célja}}\label{program-cuxe9lja}
+
+A projektem célja, hogy egy az autóra elejére, a szélvédő mögé és a
+visszapillantó tükör közelében rögzített, monokuláris kamera
+felviteléből, miközben az autó mozog az úton, a kamera származó
+videófolyamot feldolgozva, a képkockákon lévő kátyúkat felismerni,
+detektálni (képen lévő helyüket bekeretezni). A kátyú detektálását
+követően azok pontosabb helyének meghatározása az autó orrához képest.
+Ez alatt azt értem, hogy a kamerakép 2D koordináta rendszeréből a 3D
+világ koordináta rendszerébe való konverziót. A lyukkamera modellre
+építve, szeretném meghatározni a kátyú oldalirányú pozícióját az úton
+belül, a felvételt készítő autóhoz képest. Mindezt valós időben, azaz
+miközben a jármű előrefelé halad az úton a szoftvernek az autó előtti
+területet kell vizsgálnia, és előre detektálni a kátyúkat és azok
+oldalirányú pozícióit, mielőtt az autó oda érne a kátyús útszakasz
+részhez. Tehát egyfajta szoftveres előre tekintés az úton, ami nem a
+lámpákat, közlekedési táblákat és nem a felfestéseket figyeli
+útburkolaton, hanem az úthibákat, azon belül is kifejezetten a kátyúkra
+fókuszál.
+
+Meglátásom szerint egy ilyen rendszerrel alapot lehetne teremteni
+autonóm kátyú kikerülő manőverek végrehajtására egyfajta vezetéstámogató
+rendszer keretein belül. Ez nemcsak a járművek állapotának megóvásában
+jelentene előnyt, hanem növelné a közlekedés biztonságát és nem utolsó
+sorban a menetkomfortot is. Ez indokolj azt a döntésemet, hogy csak egy
+darab monokuláris kamra képpel dolgozok. Mert a jelenlegi modern autók
+esetében, sok advanced driver assistance systems (ADAS) funkció egy
+kamera kép feldolgozásával van megoldva.
+
+Szeretném ki hangsúlyozni, hogy a projekt keretein belül elsősorban csak
+a kátyúk magabiztos felismerése, azok detektálása és az úton belül
+betöltött oldalirányú helyzetük minél pontosabb meghatározása áll, a
+felvételt készítő járműhöz képest, valós időben. Tehát a rendszer nem
+foglalkozik a járműdinamikai beavatkozással (kormányzás), kizárólag a
+környezetérzékeléssel. Az esetleges vezetéstámogató rendszer rész egy
+ráépülő önvezetéssel kapcsolatos továbbfejlesztési ötlet, ami a
+motivációt adja a projekthez.
+
+\subsubsection{Elérhető funkciók
+részletesen}\label{eluxe9rhetux151-funkciuxf3k-ruxe9szletesen}
+
+\paragraph{Videófolyam feldolgozás és
+előfeldolgozás}\label{videuxf3folyam-feldolgozuxe1s-uxe9s-elux151feldolgozuxe1s}
+
+A rendszer belépési pontja a valós idejű képfeldolgozó modul, amely a
+szélvédő mögött elhelyezett monokuláris kamera jelét fogadja.
+
+Első lépésben a szoftver folyamatosan olvassa és digitalizálja a kamera
+által biztosított 2D videófolyamot. A feldolgozási lánc biztosítja, hogy
+a rendszer képes legyen tartani a bemeneti forrás sebességét
+(szinkronizált 30 FPS), ezáltal garantálva a folyamatos, akadozásmentes
+működést nagy sebességű haladás esetén is.
+
+Majd mielőtt a detektáló algoritmus lefutna, a rendszer előfeldolgozást
+végez az egyes képkockákon, hogy a nappali, természetes fényviszonyok
+mellett a lehető legkontrasztosabb képet biztosítsa a kátyúk
+körvonalainak kiemeléséhez.
+
+\paragraph{Kátyú detektálás, objektum
+felismerés}\label{kuxe1tyuxfa-detektuxe1luxe1s-objektum-felismeruxe9s}
+
+Ez a modul a rendszer szeme, amely a vizuális információk értelmezéséért
+felelős, gépi tanulás segítségével.
+
+A szoftver képes azonosítani az aszfaltozott útfelületen felszínen
+található durva, egyenletlen tál alakú mélyedés, azaz kátyúkat. A
+funkció kritikus eleme a megkülönböztetés képesség, tehát az algoritmus
+robusztusan különíti el a kátyúkat az egyéb vizuális zajoktól. A
+rendszer nem tekinti kátyúnak az árnyékokat, az útburkolati jeleket, az
+aszfalt foltszerű javításait vagy a repedéseket, így minimalizálva a
+false positive-ok számát.
+
+A funkció előre tekintő detektálást végez, a jármű előtti teret
+pásztázva, már 30 méteres távolságból azonosítsa a potenciális
+veszélyforrásokat. Ez az előre tekintés biztosítja a szükséges
+reakcióidőt a sofőr vagy egy későbbi autonóm rendszer számára.
+
+\paragraph{\texorpdfstring{ Térbeli Lokalizáció és
+Koordináta-transzformáció}{ Térbeli Lokalizáció és Koordináta-transzformáció}}\label{tuxe9rbeli-lokalizuxe1ciuxf3-uxe9s-koordinuxe1ta-transzformuxe1ciuxf3}
+
+A rendszer legfontosabb matematikai modulja, amely a detektált
+objektumokat elhelyezi a valós térben a járműhöz viszonyítva.
+
+2D-ből 3D transzformációhoz a lyukkamera-modell (pinhole camera model)
+matematikai összefüggéseit alkalmazva a szoftver a sík képi
+koordinátákat átkonvertálja a 3D világkoordináta rendszerbe. Ez a
+számítás teszi lehetővé, hogy a képernyőn látott foltból valós fizikai
+távolságadat legyen.
+
+Laterális (oldalirányú) pozíció meghatározásánál a rendszer kiszámítja a
+detektált kátyú oldalirányú elhelyezkedését a jármű hossztengelyéhez
+(orrához) képest. A funkció célja, hogy centiméteres pontossággal
+megadja, az autó nyomtávjához viszonyítva hol helyezkedik el a kátyú az
+úton.
+
+\paragraph{Valós Idejű Vizualizáció (Ember-Gép
+Interfész)}\label{valuxf3s-idejux171-vizualizuxe1ciuxf3-ember-guxe9p-interfuxe9sz}
+
+A szoftver vizuális visszajelzést biztosít a feldolgozás eredményéről.
+Kiterjesztett valóság jelleggel, a futtató eszköznek (laptop) a
+kijelzőjén megjeleníti az élő videóképet grafikus határoló keretekkel
+(bounding box) jelöli meg a detektált kátyúkat. A határoló dobozok
+mellett a rendszer szöveges formában, valós időben megjeleníti a
+\hyperref[tuxe9rbeli-lokalizuxe1ciuxf3-uxe9s-koordinuxe1ta-transzformuxe1ciuxf3]{3.1.2.3}
+pontban számított távolság adatokat. Ez lehetővé teszi a rendszer
+működésének azonnali ellenőrzését működés közben.
+
+\subsection{Követelmények}\label{kuxf6vetelmuxe9nyek}
+
+\subsubsection{Követelmények
+kifejtve}\label{kuxf6vetelmuxe9nyek-kifejtve}
+
+\paragraph{Funkcionális
+követelmények}\label{funkcionuxe1lis-kuxf6vetelmuxe9nyek}
+
+Ezen követelmények határozzák meg a rendszer alapvető működési
+mechanizmusait, a bemeneti adatok kezelésétől kezdve a feldolgozáson át
+egészen az eredmények megjelenítéséig.
+
+Bemeneti videófolyam feldolgozása A rendszer elsődleges bemeneti
+interfészének képesnek kell lennie a jármű szélvédője mögé, a
+visszapillantó tükör környezetében rögzített monokuláris kamera jelének
+fogadására. A szoftvernek folyamatosan, megszakítás nélkül kell
+feldolgoznia a kamera által biztosított, kétdimenziós videófolyamot. Ez
+a funkció képezi a környezetérzékelés alapját, így elengedhetetlen, hogy
+a rendszer a képkockák egymásutániságát időben helyesen kezelje,
+biztosítva ezzel a későbbi modulok számára szükséges adatfolyamot.
+
+Szelektív detektálás és objektumosztályozás A képfeldolgozó
+algoritmusnak magas megbízhatósággal kell azonosítania az útfelületen
+található geometriai mélyedéseket, azaz a kátyúkat. A funkció kritikus
+eleme a szelektivitás, a rendszernek képesnek kell lennie
+megkülönböztetni a valódi veszélyt jelentő úthibákat az egyéb vizuális
+zajoktól. A detektálási logikának ki kell szűrnie a false positive-okat,
+amelyeket az útburkolati jelek, az aszfalt repedései, a foltszerű
+javítások, vagy a környezeti tárgyak (fák, épületek) által vetett
+árnyékok okozhatnak. Kizárólag a jármű futóművére veszélyes mélyedések
+kerülhetnek detektálásra.
+
+Valós idejű vizualizáció és visszajelzés, a fejlesztés, tesztelés és a
+későbbi felhasználói felügyelet támogatása érdekében a rendszernek
+vizuális visszajelzést kell biztosítania a feldolgozás eredményéről. A
+feldolgozást végző eszköz (laptop) képernyőén megjelenő élő videóképen a
+detektált kátyúkat egyértelműen, a kiterjedésüket jelölő határoló
+dobozzal (bounding box) kell kiemelni. Ezen felül a vizualizációnak
+tartalmaznia kell a számított numerikus adatokat is, különös tekintettel
+a kátyú járműtől mért távolságára és az oldalirányú pozíciójára, ezzel
+segítve a rendszer pontosságának szubjektív és objektív ellenőrzését.
+
+Működési tartomány a rendszer alkalmazhatósága a projekt jelenlegi
+fázisában meghatározott útviszonyokra és járműmozgásra korlátozódik. A
+detektálási algoritmusnak aszfaltozott burkolattal ellátott utakon kell
+üzembiztosan működnie. A geometria számítások egyszerűsítése és a
+lyukkamera-modell érvényessége érdekében a rendszernek elsősorban
+egyenes vonalú haladáskor kell helytállnia. A specifikáció kizárja a
+rendszer működéséből a tolatási manővereket, valamint a hirtelen
+irányváltással járó éles kanyarokat, mivel ezekben az esetekben a
+kamerakép és a járműmozgás vektora közötti korreláció jelentősen eltér a
+modell feltételezéseitől.
+
+\paragraph{Minőségi
+követelmények}\label{minux151suxe9gi-kuxf6vetelmuxe9nyek}
+
+A minőségi követelmények definiálják azokat a teljesítménymutatókat és
+korlátokat, amelyeken belül a funkcionális követelményeknek teljesülniük
+kell a biztonságos és hatékony működés érdekében.
+
+Valós idejű működés, rendszer reakcióképességének kulcsa, hogy a teljes
+feldolgozási lánc, beleértve a kép előfeldolgozását, a detektálást, és a
+matematikai lokalizációt, képes legyen követni a bemeneti videó
+sebességét. Mivel a kamera 30 képkocka/másodperc (FPS) sebességgel
+rögzít, a szoftvernek rendelkeznie kell azzal a számítási kapacitással,
+hogy egyetlen képkocka feldolgozása ne haladja meg a \textasciitilde33
+milliszekundumot. Ez biztosítja, hogy ne alakuljon ki késleltetés, ami a
+gyorsan mozgó jármű esetén adatvesztéshez és(vagy) elkésett
+detektáláshoz vezetne.
+
+Detektálási távolság és előre tekintés, a szoftvernek képesnek kell
+lennie arra, hogy a kátyúkat 30 méteres távolságból azonosítsa. Ez a
+távolság elegendő időt biztosítana egy elméleti autonóm rendszernek vagy
+a sofőrnek a kikerülő manőver megtervezésére és végrehajtására, még
+nagyobb sebesség mellett is.
+
+Támogatott sebességtartomány A rendszernek le kell fednie a városi és az
+országúti közlekedés jellemző sebességtartományait. A képfeldolgozó
+algoritmusoknak robusztusnak kell lenniük a mozgási elmosódással
+szemben, biztosítva a stabil detektálást álló helyzettől (0 km/h)
+egészen 70 km/h sebességig. A szoftver működése nem degradálódhat a
+jármű sebességének növekedésével ezen a tartományon belül.
+
+Lokalizációs pontosság a projekt egyik legfontosabb műszaki kihívása a
+2D képpontok 3D térbeli koordinátákká való konvertálása. A járműhöz
+közel, 10 méteres távolságon belül a kátyú oldalirányú pozíciójának
+becslési hibája nem haladhatja meg a ±15 cm-t. Ez a pontosság kritikus
+fontosságú, mivel egy átlagos gumiabroncs szélessége is összemérhető
+ezzel az értékkel.
+
+A minél jobb környezeti robusztussághoz rengeteg adatra és számítási
+kapacitásra van szükség. Ezért a szoftvernek csak nappali, természetes
+fényviszonyok mellett kell megbízhatóan üzemelnie. Ez magában foglalja a
+napsütéses, felhős vagy változóan árnyékos időszakokat is, azonban a
+jelenlegi fázisban nem terjed ki az éjszakai vezetésre vagy az extrém
+időjárási körülmények (köd, szakadó eső, havas táj) kezelésére.
+
+\subsubsection{\texorpdfstring{Követelmények felsorolás jelleggel
+}{Követelmények felsorolás jelleggel }}\label{kuxf6vetelmuxe9nyek-felsoroluxe1s-jelleggel}
+
+\paragraph{Funkcionális
+követelmények}\label{funkcionuxe1lis-kuxf6vetelmuxe9nyek-1}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Bemenet: A rendszernek fel kell dolgoznia a szabványos, monokuláris
+  kamera által biztosított 2D videófolyamot.
+\item
+  Szelektív detektálás: A szoftvernek képesnek kell lennie a kátyúk
+  megkülönböztetésére egyéb útburkolati jelektől (felfestések,
+  repedések, foltok, árnyékok).
+\item
+  Vizualizáció: A detektált hibákat a képernyőn határoló dobozzal és a
+  számított távolságadatok megjelenítésével kell jelölni.
+\item
+  Működési tartomány: A detektálásnak aszfaltozott egyenes úton, egyenes
+  vonalú haladás esetén kell működnie, tolatás és éles kanyarok esetén
+  nem.
+\end{enumerate}
+
+\paragraph{Minőségi
+követelmények}\label{minux151suxe9gi-kuxf6vetelmuxe9nyek-1}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Valós idejűség: A teljes feldolgozási láncnak (pre-processing,
+  detektálás, lokalizáció) követnie kell a bemeneti 30FPS videó
+  sebességét.
+\item
+  Detektálási távolság: A rendszernek legalább 30 méter távolságból fel
+  kell ismernie a kátyúkat.
+\item
+  Sebességtartomány: A funkciónak 0--70 km/h járműsebesség mellett
+  stabilan kell működnie.
+\item
+  Lokalizációs pontosság: A kátyú oldalirányú pozíciójának becslési
+  hibája a járműtől 10 méteren belül nem haladhatja meg a ±15 cm-t.
+\item
+  Robusztusság: A rendszernek nappali, természetes fényviszonyok mellett
+  kell üzembiztosan működnie.
+\end{enumerate}
+
+\subsection{\texorpdfstring{Megvalósítási módszertan
+}{Megvalósítási módszertan }}\label{megvaluxf3suxedtuxe1si-muxf3dszertan}
+
+A rendszer komplexitása indokolta a hibrid fejlesztési módszertan
+alkalmazását, amely ötvözi a modern, adat vezérelt mesterséges
+intelligenciát a klasszikus, determinisztikus matematikai modellezéssel.
+A fejlesztés során két eltérő, de egymást kiegészítő stratégiát
+használok
+
+\subsubsection{\texorpdfstring{Környezetérzékelés: Iteratív Kísérleti
+Fejlesztés
+}{Környezetérzékelés: Iteratív Kísérleti Fejlesztés }}\label{kuxf6rnyezetuxe9rzuxe9keluxe9s-iteratuxedv-kuxedsuxe9rleti-fejlesztuxe9s}
+
+A kátyúk vizuális felismeréséért felelős modul létrehozása iteratív
+(ciklikus) fejlesztési modell alapján történt, amely a gépi tanuláson
+alapuló projektekre jellemző. A folyamat az adatgyűjtés, annotálás,
+modelltanítás és kiértékelés (validáció) ismétlődő köreiből állt. A
+teszteredmények folyamatos visszacsatolása alapján finomhangolm a modell
+hiperparamétereit.
+
+\subsubsection{Lokalizáció: Analitikus Modellalapú
+Rekonstrukció}\label{lokalizuxe1ciuxf3-analitikus-modellalapuxfa-rekonstrukciuxf3}
+
+A detektált hibák laterális pozíciójának és távolságának
+meghatározásához deduktív, matematikai modellalapú módszertant
+alkalmazok. Ez a megközelítés nem tanuláson, hanem szigorú geometriai
+szabályokon, konkrétan a lyukkamera modell alkalmazásán alapul. A
+módszer a síkút feltételezésre építve. A számítások pontosságát a kamera
+belső és külső paramétereinek előzetes kalibrációja biztosítja.

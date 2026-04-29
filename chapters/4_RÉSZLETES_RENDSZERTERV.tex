@@ -1,0 +1,520 @@
+\section{RÉSZLETES RENDSZERTERV}\label{ruxe9szletes-rendszerterv}
+
+\subsection{Rendszer architektúra}\label{rendszer-architektuxfara}
+
+A szoftver belső működése egy szigorúan szekvenciális adatfeldolgozási
+láncra (pipeline) épül. Az alábbiakban a rendszer szoftveres
+komponenseinek technikai kapcsolatait és az adatok transzformációját
+ismertetem.
+
+\subsubsection{Adatfolyam}\label{adatfolyam}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Nyers adatbeolvasás: A folyamat a kamera által rögzített analóg
+  optikai jel digitalizálásával kezdődik. A bemenet egy W×H felbontású,
+  3 csatornás (RGB/BGR) mátrix.
+\item
+  Geometriai korrekció: A nyers képkockán a rendszer lencsetorzítás
+  mentesítést végez az előzetes kalibrációs paraméterek alapján. Az adat
+  típusa itt még változatlanul kép.
+\item
+  Következtetés: A korrigált kép a detektálás modulhoz kerül. Ezen a
+  ponton az adat jellege megváltozik: a kimenet már nem kép, hanem egy
+  strukturált objektumlista, amely tartalmazza a detektált kátyúk
+  osztályát, konfidencia értékét és a határoló dobozának koordinátáit.
+\item
+  Transzformáció: A 2D pixelkoordináták a geometriai modulba kerülnek,
+  amely előállítja a valós térbeli (X, Y) koordinátákat (méterben).
+\item
+  Megjelenítés: A metaadatok (dobozok és távolságok) visszaírásra
+  kerülnek az eredeti videófolyamra, létrehozva a felhasználó számára
+  látható kimenetet.
+\end{enumerate}
+
+\subsection{Fejlesztői környezet}\label{fejlesztux151i-kuxf6rnyezet}
+
+\subsubsection{Hardveres környezet}\label{hardveres-kuxf6rnyezet}
+
+A projekt hardveres infrastruktúrája funkcionálisan két elkülönülő
+részre bontható. Az erőforrásigényes feladatokat, mint a gépi tanulás,
+tanítása és a rendszer fejlesztése egy nagy teljesítményű asztali
+munkaállomás látja el. Ezzel szemben a terepi tesztelést és a valós
+idejű működés demonstrálását egy laptop és egy ahhoz csatlakoztatott
+külső kamera biztosítja, szimulálva a gépjárműbe integrált fedélzeti
+egységet.
+
+\subsubsection{Fejlesztői
+munkaállomás}\label{fejlesztux151i-munkauxe1llomuxe1s}
+
+A szoftver fejlesztése, a tanító adathalmazok kezelése és a mélytanulási
+modell betanítása egy dedikált asztali konfiguráción történik. A gép
+specifikációjának kiválasztásakor a legfontosabb szempont a GPU
+memóriamérete (VRAM) és a CUDA magok száma volt a párhuzamosított
+számítások gyorsítása érdekében.
+
+\paragraph{\texorpdfstring{ A választott hardver
+specifikációja}{ A választott hardver specifikációja}}\label{a-vuxe1lasztott-hardver-specifikuxe1ciuxf3ja}
+
+\begin{itemize}
+\item
+  CPU: Intel Core i5-6600 (4 mag, 3.30 GHz), felelős az operációs
+  rendszer futtatásáért és az adatok előkészítéséért (data loading) a
+  GPU számára.
+\item
+  RAM: 16GB DDR4, ez a memóriaigény biztosítja a nagyméretű
+  képállományok és a tanítási batch-ek akadálymentes betöltését.
+\item
+  GPU: NVIDIA GeForce GTX 1060 6GB, a konfiguráció kulcseleme. A 6GB
+  dedikált videomemória lehetővé teszi a közepes komplexitású
+  konvolúciós hálózatok hatékony tanítását és a valós idejű inferencia
+  tesztelését magas képfrissítési ráta mellett.
+\end{itemize}
+
+\subsubsection{Futtató környezet}\label{futtatuxf3-kuxf6rnyezet}
+
+A rendszer valós környezetben történő teszteléséhez egy olyan futtató
+platformra van szükség, amely mobilis, és számítási kapacitásában képes
+modellezni a modern gépjárművekben alkalmazott vezetéstámogató (ADAS)
+céleszközöket (például: NVIDIA Jetson sorozat vagy dedikált ECU-k).
+
+A fejlesztés jelenlegi, „Proof of Concept'' (koncepcióigazolás)
+fázisában a fedélzeti egység szerepét egy laptop tölti be. Ez a
+megközelítés lehetővé teszi a szoftver architektúrájának és az
+algoritmusok helyességének validálását anélkül, hogy a drága és nehezen
+hozzáférhető beágyazott hardverek korlátoznák a munkát. A laptop
+feladata, hogy szimulálja a járműbe épített számítógépet, fogadja a
+kamera jelét, futtattja a szoftvert, és megjelenítse az eredményt a
+képernyőjén, miközben az eszköz az autó utasterében, hálózati áramforrás
+nélkül üzemel.
+
+\paragraph{A választott hardver
+specifikációja}\label{a-vuxe1lasztott-hardver-specifikuxe1ciuxf3ja-1}
+
+\begin{itemize}
+\item
+  Processzor (CPU): Intel Core i5-8300H (4 mag, 8 szál, alapórajel: 2.30
+  GHz, Turbo: 4.00 GHz) -- x86-64 architektúra.
+\item
+  Memória (RAM): 8 GB DDR4 (2667 MHz).
+\item
+  Grafikus gyorsító (GPU): NVIDIA GeForce GTX 1050 Ti (4 GB GDDR5
+  dedikált VRAM, Pascal architektúra).
+\end{itemize}
+
+\subsubsection{\texorpdfstring{Kamera }{Kamera }}\label{kamera}
+
+A rendszer vizuális bemenetét egy Logitech C270 típusú webkamera
+biztosítja. A szenzor kiválasztásánál a költséghatékonyság és a
+széleskörű elérhetőség volt a fő szempont, bizonyítva, hogy a
+fejlesztett algoritmus képes olcsó, kereskedelmi forgalomban kapható
+hardveren is megbízhatóan működni.
+
+\paragraph{A választott hardver
+specifikációja}\label{a-vuxe1lasztott-hardver-specifikuxe1ciuxf3ja-2}
+
+\begin{itemize}
+\item
+  Felbontás: HD 720p (1280x720 pixel). A választás kompromisszumos
+  megoldás a részletgazdagság és a számítási igény között.
+\item
+  Képfrissítési frekvencia: 30 FPS (képkocka/másodperc). Ez az érték
+  33,3 ms-os időablakot definiál minden egyes képkocka feldolgozására. A
+  30 FPS biztosítja a folyamatos mozgásérzetet és a megfelelő
+  reakcióidőt városi sebesség (maximum 70 km/h) mellett, ahol az autó
+  egy frame alatt (70 km/h esetén) kb. 64 cm-t tesz meg.
+\item
+  Látószög (FOV): 60°-os diagonális látószög, amely a szélvédő mögé, a
+  visszapillantó tükör síkjába helyezve optimális lefedettséget biztosít
+  a jármű előtti aszfaltozott út megfigyelésére.
+\item
+  Adatkapcsolat: USB 2.0 interfész, amely biztosítja a tömörített
+  videófolyam átvitelét a futtató környezet felé.
+\end{itemize}
+
+\subsubsection{Szoftver technológiák}\label{szoftver-technoluxf3giuxe1k}
+
+A szoftverrendszer implementációja során a modern számítógépes látás és
+mélytanulás ipari szabványainak tekinthető, nyílt forráskódú
+technológiai vermet (tech stack) alkalmaztam. A választásnál a
+modularitás, a széleskörű dokumentáltság és a hardveres gyorsítás (GPU)
+támogatása volt a döntő szempont.
+
+Az elsődleges fejlesztés nyelve a Python 3.10\textbf{+}. Bár a C++
+futási sebessége gyorsabb, a Python mellett szólt a rendkívül gazdag
+könyvtári támogatottság, a gyors prototípuskészítés lehetősége és a kód
+olvashatósága. A sebességkritikus műveleteket (pl. mátrixszorzás,
+konvolúció) nem maga a Python értelmező, hanem a háttérben futó, C/C++
+nyelven írt optimalizált könyvtárak (OpenCV, NumPy, PyTorch) végzik, így
+a nyelvválasztás nem jelent szűk keresztmetszetet a valós idejű
+működésben.
+
+\paragraph{Alkalmazott könyvtárak és
+keretrendszerek}\label{alkalmazott-kuxf6nyvtuxe1rak-uxe9s-keretrendszerek}
+
+OpenCV (Open Source Computer Vision Library) ez a könyvtár biztosítja a
+képfeldolgozási pipeline vázát. A videófolyam beolvasása
+(cv2.VideoCapture), a kamera optikai torzításának valós idejű
+korrekciója (undistort), a perspektív transzformációk végrehajtása (IPM)
+a távolságméréshez, valamint a detektált objektumok és adatok vizuális
+megjelenítése a képernyőn.
+
+NumPy (Numerical Python) a rendszer matematikai motorja. A Python
+beépített listáival ellentétben a NumPy tömbök (ndarray)
+memóriafolytonos tárolást alkalmaznak, ami nagyságrendekkel gyorsabb
+adatkezelést tesz lehetővé. A projektben a pixeladatok mátrixként való
+kezelése és a 3D lokalizációhoz szükséges lineáris algebrai műveletek
+(pl. homográfia mátrixszal való szorzás, vektorizált
+koordináta-transzformációk) elvégzése alkalmas.
+
+Ultralytics YOLO (v8/v11) \& PyTorch A kátyúdetektálást végző
+mesterséges intelligencia modul alapja. A PyTorch egy alacsony szintű
+mélytanulási keretrendszer, amely dinamikus számítási gráfokat használ,
+míg az Ultralytics könyvtár egy magas szintű absztrakciót biztosít a
+YOLO (You Only Look Once) architektúra egyszerű tanításához és
+futtatásához.
+
+CUDA Toolkit és cuDNN (NVIDIA) A hardver és a szoftver közötti híd. Ez
+az API teszi lehetővé, hogy a Python kód (a PyTorch keretrendszeren
+keresztül) közvetlenül hozzáférjen a GPU párhuzamos számítási
+egységeihez.
+
+\paragraph{Fejlesztői eszközök}\label{fejlesztux151i-eszkuxf6zuxf6k}
+
+\begin{itemize}
+\item
+  IDE: Visual Studio Code / PyCharm (kódolás és debuggolás).
+\item
+  Verziókezelés: Git (a forráskód változásainak követésére).
+\item
+  Csomagkezelés: Pip / Anaconda (a függőségek és virtuális környezetek
+  izolált kezelésére).
+\end{itemize}
+
+\subsection{Modulok felépítése}\label{modulok-feluxe9puxedtuxe9se}
+
+\subsubsection{Adatmodell és
+struktúrák}\label{adatmodell-uxe9s-struktuxfaruxe1k}
+
+\paragraph{Kátyú objektum főbb
+attribútumai}\label{kuxe1tyuxfa-objektum-fux151bb-attribuxfatumai}
+
+A rendszer központi adategysége a Kátyú objektum. Amikor a detektor
+felismer egy úthibát, példányosít egy ilyen objektumot, amely a
+feldolgozási lánc végéig kíséri az adott hibát, folyamatosan bővülve új
+attribútumokkal.
+
+\begin{itemize}
+\item
+  Azonosító (ID): Egyedi egész szám, amely lehetővé teszi a kátyú
+  követését több képkockán keresztül.
+\item
+  Határoló doboz (bounding box): A detektált kátyú bounding box
+  koordinátái a képen (x, y, w, h) formátumban.
+\item
+  Megbízhatóság (confidence): A mélytanuláson alapuló algoritmus által
+  visszaadott valószínűségi 0,0 -- 1,0 közötti érték, amely jelzi,
+  mennyire biztos a rendszer a detektálás helyességében.
+\item
+  Valóspozíció (real world coordinates): A lokalizációs modul által
+  számított 3D pozícióvektor X\_lat, Y\_long, amely méterben vagy
+  centiméterben adja meg a hiba távolságát a jármű referenciapontjához
+  képest.
+\end{itemize}
+
+\paragraph{Kamera objektum főbb
+attribútumai}\label{kamera-objektum-fux151bb-attribuxfatumai}
+
+Ez az osztály felelős az autóra rögzített kamera elhelyezéséének pontos
+paramétereiért.
+
+\begin{itemize}
+\item
+  Magassága (H\_cam): 1,45 méter a földtől.
+\item
+  Oldalirányú eltolása (T\textsubscript{\_}x): a jármű középvonalától
+  0,0 méterre.
+\item
+  Hosszirányú eltolása (T\_y): a lökhárítótól való távolság 0,85
+  méterre.
+\item
+  A kamera bólintási szöge (0\_pitch): 0,05236 radiánban (3fok).
+\end{itemize}
+
+\subsubsection{Fő vezérlési ciklus}\label{fux151-vezuxe9rluxe9si-ciklus}
+
+A rendszer működését egy központi vezérlőmodul koordinálja. Ennek a
+modulnak a feladata a rendszerindítás, az erőforrások menedzselése, a
+feldolgozási lánc (pipeline) elemeinek szinkronizált meghívása, valamint
+a futás felügyelete. Programozástechnikai szempontból ez a modul
+tartalmazza a belépési pontot (main függvény) és a végtelen ciklust
+(while loop).
+
+\paragraph{Inicializálás és erőforrás
+foglalás}\label{inicializuxe1luxe1s-uxe9s-erux151forruxe1s-foglaluxe1s}
+
+A program indításakor a vezérlő első feladata a szükséges statikus
+erőforrások betöltése a memóriába, még a feldolgozási ciklus megkezdése
+előtt. Ekkor történik a konfiguráció betöltése. Mint a rendszer
+paramétereinek (pl. kamerakalibrációs mátrixok, detektálási
+küszöbértékek, ROI beállítások) beolvasása külső fájlokból. Modell
+inicializálás: A YOLO hálózat súlyainak betöltése a GPU memóriájába,
+hogy az első képkocka feldolgozása már ne szenvedjen késedelmet.
+Kamerakapcsolat létesítés a cv2.VideoCapture interfész megnyitása és a
+kamera paramétereinek (felbontás, FPS) ellenőrzése.
+
+\paragraph{A valós idejű feldolgozási
+ciklus}\label{a-valuxf3s-idejux171-feldolgozuxe1si-ciklus}
+
+A rendszer egy végtelen ciklus működteti, amely addig fut, amíg a
+felhasználó leállítási parancsot nem ad. A cikluson belül szigorú
+szekvenciális végrehajtás történik, ezzel biztosítva az adatok
+konzisztenciáját.
+
+A vezérlő lekéri a legfrissebb nyers képkockát a kamera pufferéből.
+Amennyiben az olvasás sikertelen, a modul hibaüzenetet generál vagy
+megkísérli az újra csatlakozást.
+
+Sikeres lekérés után a modulhívások láncolata következik. A vezérlő
+sorrendben átadja az adatokat az alrendszereknek:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Előfeldolgozó: a nyers képből torzításmentesített képet készít.
+\item
+  Detektor: A bementi képből elkészíti az objektum listát.
+\item
+  Lokalizáló: Elvégzi konverziót és kinyeri a távolság adatokat.
+\item
+  Megjelenítő: A feldolgozás során kinyert adatokat rá illeszti a videó
+  képre és megjeleníti azt.
+\end{enumerate}
+
+Teljesítmény monitorozás: A vezérlő minden ciklusban méri a futási időt,
+és ebből valós időben számítja az FPS értéket. Ez az adat
+visszacsatolást ad a rendszer terheltségéről.
+
+A szoftver futásának ellenőrzött, manuális megszakítása a felhasználó
+által kezdeményezhető az erre a célra dedikált ESC billentyű
+lenyomásával. A vezérlő modul a fő feldolgozási ciklus minden
+iterációjában figyeli a billentyűzet-eseményeket, és a megszakítási
+kérelem észlelésekor azonnal kilép a végrehajtási hurokból, elindítva a
+szabályos leállítási mechanizmust.
+
+\subsubsection{Előfeldolgozás}\label{elux151feldolgozuxe1s}
+
+\paragraph{Torzításmentesítés}\label{torzuxedtuxe1smentesuxedtuxe9s}
+
+A modul a rendszerindításkor betöltött kalibrációs paraméterek
+(kamera-mátrix és torzítási együtthatók) alapján minden egyes képkockán
+geometriai korrekciót (cv2.undistort) végez. Ez az eljárás megszünteti a
+lencse által okozott görbületeket a képek szélein.
+
+\paragraph{Képarány helyes
+átméretezés}\label{kuxe9paruxe1ny-helyes-uxe1tmuxe9retezuxe9s}
+
+A szoftver a korrigált képet a YOLO által megkövetelt fix felbontásra
+640x640 pixel méretezi át (cv2.resize). Az eredeti képarány megtartása
+mellett skálázza a képet, a fennmaradó üres területeket
+(cv2.copyMakeBorder) pedig kitöltő színnel (padding) látja el. Ezzel
+elkerülhető a detektált objektumok alakjának torzulása.
+
+\paragraph{Normalizálás és
+formázás}\label{normalizuxe1luxe1s-uxe9s-formuxe1zuxe1s}
+
+A képadat utolsó transzformációs lépése a PyTorch keretrendszer bemeneti
+követelményeinek teljesítése. A színteret BGR-ről konvertálja RGB-re, a
+pixelértékeket a {[}0, 1{]} tartományba normalizálja, végül a mátrixot a
+GPU-feldolgozáshoz szükséges tenzor formátummá alakítja.
+
+\subsubsection{Kátyú detektálás}\label{kuxe1tyuxfa-detektuxe1luxe1s}
+
+A detektálási feladatot az Ultralytics által fejlesztett YOLOv8
+architektúra legkisebb, erőforrás optimalizált változata, a YOLOv8 Nano
+(v8n) látja el. A választás azért esett erre a variánsra, mert a modell
+paraméterszáma (kb. 3.2 millió) és számítási igénye (FLOPs) rendkívül
+alacsony, így a rendelkezésre álló laptop (GTX 1050 Ti) is biztosítható
+a stabil 30 FPS feletti futási sebesség. A rendszer a saját adathalmazon
+előtanított súlyfájlt (.pt kiterjesztésű modell) tölti be a GPU
+memóriájába az inicializálás során.
+
+\paragraph{Tanítás
+implementáció}\label{tanuxedtuxe1s-implementuxe1ciuxf3}
+
+A YOLO algoritmus létrehozása során a Transfer Learning módszertanát
+alkalmazom, amely lehetővé teszi a nagy adatbázisokon megszerzett tudás
+átörökítését.
+
+Előtanítás során a modell súlyainak inicializálása egy olyan YOLOv8 Nano
+modellen alapul, amelyet előzetesen a nemzetközileg elismert Road Damage
+Dataset (RDD) több tízezer képén tanítottak be. Ez a lépés biztosítja,
+hogy a hálózat elsajátítsa az úthibák általános vizuális jellemzőit.
+
+Finomhangolásban a RDD-n előtanított alapmodellt ezt követően egy kisebb
+elemszámú, de specifikusabb publikus adathalmazon tanítom tovább. Ez a
+folyamat pontosította a modell detektálási képességét, növelve a
+felismerés megbízhatóságát a célkörnyezetben.
+
+\subsubsection{Kátyú lokalizálás}\label{kuxe1tyuxfa-lokalizuxe1luxe1s}
+
+\paragraph{Számítás menete}\label{szuxe1muxedtuxe1s-menete}
+
+A számítás megkezdése elött megvizsgálja a kátyú osztály példánynak a
+megbízhatóság (confidence) értékét, ha az nagyobb mint 0,5 akkor
+belekezd a számításba.
+
+A Kátyú objektumból (Bemenet):
+
+\begin{itemize}
+\item
+  x, y, w, h: A határoló doboz paraméterei pixelben.
+\end{itemize}
+
+A Kamera objektumból (Konstansok):
+
+\begin{itemize}
+\item
+  H\_cam: Kamera magassága (méterben, pl. 1.45).
+\item
+  T\_x: Kamera oldalirányú eltolása a jármű középpontjától (méterben).
+\item
+  T\textsubscript{\_}z: Kamera hosszirányú eltolása a jármű
+  referenciapontjától (pl. lökhárítótól) (méterben).
+\item
+  0\_pitch: A kamera bólintási szöge
+\end{itemize}
+
+Kamera belső paraméterek:
+
+\begin{itemize}
+\item
+  f\_x, f\_y: Fókusztávolság pixelben.
+\item
+  c\_x, c\_y: Az optikai középpont koordinátái pixelben.
+\end{itemize}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Lépés a talppontot meghatározása. A kátyú térbeli helyzetét annak az
+  útfelülethez legközelebb eső pontja határozza meg. A bounding box
+  alapján a referenciapont (u\_ref, v\_ref):
+\end{enumerate}
+
+\[u\_ ref\  = \ x\  + \ w/2\]
+
+\[v\_ ref\  = \ y\  + \ h\]
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{1}
+\item
+  Lépés: a beesési szög számítása. A képpont függőleges koordinátájából
+  (v\_ref) meghatározza a fénysugár beesési szögét az optikai tengelyhez
+  képest
+\end{enumerate}
+
+\[alpha\ \  = \ arctan((v\_ ref\  - \ c\_ y)/f\_ y)\]
+
+A teljes szöget (gamma) az útfelület normálisához (függőlegeshez) képest
+a kamera fizikai dőlésszöge (0\_pitch) és a pixeltől függő szög összege
+adja:
+
+\[gamma\  = \ 0\_ pitch\  + \ alpha\]
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{2}
+\item
+  Lépés: a hosszirányú távolság számítása (Kamera koordinátákban). A
+  síkút feltételezés (Z\_worl = 0) alapján egy derékszögű háromszög
+  alakul ki, ahol az egyik befogó a kamera magassága (H\_cam), a másik
+  pedig a keresett távolság (d\_optical) a talajon.
+\end{enumerate}
+
+\[d\_ optical\  = \ H\_ cam\ /\ tan(gamma)\]
+
+Ez az érték a kamera vetületétől mért távolság az úton.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{3}
+\item
+  Lépés: az oldalirányú pozíció számítása (Kamera koordinátákban). A
+  vízszintes pixelkoordináta (u\_ref) és a fókusztávolság (f\_x) aránya
+  megegyezik a valós oldalirányú kitérés (x\_cam) és a mért távolság
+  (d\_optical) arányával:
+\end{enumerate}
+
+\[x\_ cam\  = \ (u\_ ref\  - \ c\_ x)\ *\ (d\_ optical\ /\ f\_ x)\]
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{4}
+\item
+  Lépés: transzformáció a Jármű-koordinátarendszerbe. Utolsó lépésként a
+  kamera koordináta rendszerében kapott értékeket átültetjük a jármű
+  rögzített koordinátáiba. Mivel a kamera a szélvédő mögött van a
+  hosszirányú távolságból ezt az értéket le kell vonni. Hosszirányú
+  pozíció (Y\_long):
+\end{enumerate}
+
+\[Y\_ long\  = \ d\_ optical\  - \ T\_ z\]
+
+(Ha Y\_éong negatív, a kátyú már a lökhárító vonala mögött van).
+
+Oldalirányú pozíció (X\_lat):
+
+\[X\_ lat\  = \ x\_ cam\  + \ T\_ x\]
+
+\paragraph{Bólintási zaj
+csökkentése}\label{buxf3lintuxe1si-zaj-csuxf6kkentuxe9se}
+
+A számításra legkritikusabb hibaforrása a jármű felfüggesztésének
+mozgásából eredő dinamikus bólintó hatás, ami által az állandónak
+tekintett pitch (0\_pitch) nem lesz igaz. Így a kátyú számított
+hosszirányú pozíciójában jelentős, véletlenszerűnek tűnő ingadozásokat
+okoz. Ennek a geometriai zajnak a kiküszöbölésére a rendszer egy
+lineáris Kalman szűrőt alkalmazása indokolt, amely a zajos méréseket egy
+determinisztikus fizikai mozgásmodellel ötvözi.
+
+A szűrő működésének alapelve azon a fizikai tényen nyugszik, hogy az
+úthiba statikus objektum, a jármű pedig tehetetlenségéből adódóan rövid
+időintervallumon belül egyenletes sebességgel közeledik felé, így a
+kátyú valós távolságának változása nem lehet ugrásszerű.
+
+\subsubsection{Megjelenítés}\label{megjelenuxedtuxe9s}
+
+\paragraph{Grafikus annotáció (Bounding Box
+kirajzolás)}\label{grafikus-annotuxe1ciuxf3-bounding-box-kirajzoluxe1s}
+
+A modul bemenetét a detektált és szűrt kátyú objektumok listája képezi.
+A rendszer iterál ezen a listán, és minden egyes objektumhoz tartozó
+pixelkoordináták (x, y, w, h) alapján egy határoló keretet (bounding
+box) rajzol a videóképre. A megvalósításhoz az OpenCV könyvtár rectangle
+függvényét alkalmazza a szoftver. A keret színe és vastagsága
+konfigurálható, biztosítva a láthatóságot változó fényviszonyok mellett
+is.
+
+\paragraph{Metrikus adatok
+kijelzése}\label{metrikus-adatok-kijelzuxe9se}
+
+A puszta detektáláson túl a rendszer legfontosabb kimenete a
+távolságbecslés. A modul a boounding box közvetlen közelében, szöveges
+formátumban megjeleníti a lokalizációs alrendszer által számított valós
+fizikai távolságokat. A szoftver a putText eljárás segítségével írja ki
+a jármű orrától mért longitudinális (Y\_long) és a középvonaltól mért
+laterális (X\_lat) távolságot méterben vagy centiméterben.
+
+\paragraph{Rendszerállapot és
+teljesítmény-monitorozás}\label{rendszeruxe1llapot-uxe9s-teljesuxedtmuxe9ny-monitorozuxe1s}
+
+A fejlesztés és a valós idejű tesztelés során kritikus fontosságú a
+hardveres erőforrások kihasználtságának nyomon követése. A modul a
+képernyő sarkában folyamatosan frissülő információs sávot jelenít meg.
+Itt kerül kiírásra a vezérlő modul által mért pillanatnyi képfrissítési
+sebesség (FPS). Ez az adat szolgál elsődleges validációként arra, hogy a
+rendszer képes-e tartani a specifikációban előírt valós idejű működést a
+feldolgozás során.

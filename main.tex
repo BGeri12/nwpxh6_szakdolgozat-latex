@@ -1,0 +1,69 @@
+% template file include
+%\includeonly{ chapters/2_Hasonlo_Fejlesztesek_Vizsgalata}
+\input{template}
+
+\begin{document}
+
+\pagenumbering{gobble}
+
+% ELŐLAPOK: borító, feladatlap, nyilatkozat, konzultációs napló
+\includepdf[pages=-]{includes/BELSO-BORITOLAP_DM.pdf}
+\includepdf[pages=-]{includes/FELADATLAP.pdf}
+\includepdf[pages=-]{includes/HALLGATOI-NYILATKOZAT_DM.pdf}
+\includepdf[pages=-]{includes/KONZULTACIOS-NAPLO_DM2_NAPPALI 1.pdf}
+\includepdf[pages=-]{includes/KONZULTACIOS-NAPLO_DM3_NAPPALI 1.pdf}
+\includepdf[pages=-]{includes/KONZULTACIOS-NAPLO_DM4_NAPPALI 1.pdf}
+
+\section*{ABSZTRAKT}
+Absztrakt magyarul.
+
+\newpage
+\section*{ABSTRACT}
+Abstract in english.
+
+
+
+% TARTALOMJEGYZÉK
+\newpage
+\pagenumbering{arabic}
+\tableofcontents
+\newpage
+% -----------------------------------------------------
+
+% ITT KELL HOZZÁADNI A FEJEZETEKET, CÍM NAGYBETŰVEL:
+
+\clearpage
+
+\include{chapters/1_Bevezetes}
+\newpage
+
+\include{chapters/2_Hasonlo_Fejlesztesek_Vizsgalata}
+\newpage
+
+\include{chapters/3_SPECIFIKÁCIÓ}
+\newpage
+
+\include{chapters/4_RÉSZLETES_RENDSZERTERV}
+\newpage
+
+% ------------------------------------------------------
+
+% JEGYZÉKEK, INNEN KI LEHET KOMMENTEZNI AMELYIK ESETLEG NEM KELL (de ha van ábra/táblázat akkor kötelező, irodalomjegyzék kötelező, rövidítések opcionális)
+
+\clearpage
+\section{IRODALOMJEGYZÉK}
+\printbibliography[heading=none]
+
+\clearpage
+\renewcommand{\listfigurename}{ÁBRAJEGYZÉK}
+\listoffigures
+
+\clearpage
+\renewcommand{\listtablename}{TÁBLAJEGYZÉK}
+\listoftables
+
+%\clearpage
+%\section{RÖVIDÍTÉSEK}
+%\input{acronyms}
+
+\end{document}
