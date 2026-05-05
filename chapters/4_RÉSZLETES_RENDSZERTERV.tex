@@ -2,8 +2,7 @@
 
 \subsection{Rendszer architektúra}\label{rendszer-architektuxfara}
 
-A szoftver belső működése egy szigorúan szekvenciális adatfeldolgozási
-láncra (pipeline) épül. Az alábbiakban a rendszer szoftveres
+A szoftver belső működése egy szigorúan szekvenciális pipeline-ra épül. Az alábbiakban a rendszer szoftveres
 komponenseinek technikai kapcsolatait és az adatok transzformációját
 ismertetem.
 
@@ -29,33 +28,21 @@ ismertetem.
   amely előállítja a valós térbeli (X, Y) koordinátákat (méterben).
 \item
   Megjelenítés: A metaadatok (dobozok és távolságok) visszaírásra
-  kerülnek az eredeti videófolyamra, létrehozva a felhasználó számára
+  kerülnek az eredeti videofolyamra, létrehozva a felhasználó számára
   látható kimenetet.
 \end{enumerate}
 
 \subsection{Fejlesztői környezet}\label{fejlesztux151i-kuxf6rnyezet}
 
-\subsubsection{Hardveres környezet}\label{hardveres-kuxf6rnyezet}
-
-A projekt hardveres infrastruktúrája funkcionálisan két elkülönülő
-részre bontható. Az erőforrásigényes feladatokat, mint a gépi tanulás,
-tanítása és a rendszer fejlesztése egy nagy teljesítményű asztali
-munkaállomás látja el. Ezzel szemben a terepi tesztelést és a valós
-idejű működés demonstrálását egy laptop és egy ahhoz csatlakoztatott
-külső kamera biztosítja, szimulálva a gépjárműbe integrált fedélzeti
-egységet.
-
-\subsubsection{Fejlesztői
-munkaállomás}\label{fejlesztux151i-munkauxe1llomuxe1s}
+\subsubsection{Fejlesztői munkaállomás}\label{fejlesztux151i-munkauxe1llomuxe1s}
 
 A szoftver fejlesztése, a tanító adathalmazok kezelése és a mélytanulási
-modell betanítása egy dedikált asztali konfiguráción történik. A gép
+modell betanítása, finomhangolása egy dedikált asztali konfiguráción történik. A gép
 specifikációjának kiválasztásakor a legfontosabb szempont a GPU
 memóriamérete (VRAM) és a CUDA magok száma volt a párhuzamosított
 számítások gyorsítása érdekében.
 
-\paragraph{\texorpdfstring{ A választott hardver
-specifikációja}{ A választott hardver specifikációja}}\label{a-vuxe1lasztott-hardver-specifikuxe1ciuxf3ja}
+hardver specifikációja: 
 
 \begin{itemize}
 \item
@@ -72,133 +59,44 @@ specifikációja}{ A választott hardver specifikációja}}\label{a-vuxe1lasztot
   tesztelését magas képfrissítési ráta mellett.
 \end{itemize}
 
-\subsubsection{Futtató környezet}\label{futtatuxf3-kuxf6rnyezet}
+\subsubsection{Szimulációs környezet}\label{szoftver-technoluxf3giuxe1k}
 
-A rendszer valós környezetben történő teszteléséhez egy olyan futtató
-platformra van szükség, amely mobilis, és számítási kapacitásában képes
-modellezni a modern gépjárművekben alkalmazott vezetéstámogató (ADAS)
-céleszközöket (például: NVIDIA Jetson sorozat vagy dedikált ECU-k).
+A szakirodalomban elterjedt platformok, különösen a CARLA és a BeamNG.tech, összehasonlítása alapján a projekt megvalósításához az utóbbi környezet alkalmazása indokolt számomra. A döntést a vizuális és dinamikai valósághűség, a validálhatóság.
 
-A fejlesztés jelenlegi, „Proof of Concept'' (koncepcióigazolás)
-fázisában a fedélzeti egység szerepét egy laptop tölti be. Ez a
-megközelítés lehetővé teszi a szoftver architektúrájának és az
-algoritmusok helyességének validálását anélkül, hogy a drága és nehezen
-hozzáférhető beágyazott hardverek korlátoznák a munkát. A laptop
-feladata, hogy szimulálja a járműbe épített számítógépet, fogadja a
-kamera jelét, futtattja a szoftvert, és megjelenítse az eredményt a
-képernyőjén, miközben az eszköz az autó utasterében, hálózati áramforrás
-nélkül üzemel.
+A monokuláris kamerakép alapján történő 2D-3D geometriai képtranszformáció egyik legkritikusabb paramétere a kamera pozíciója és orientációja az útfelülethez képest. Valós körülmények között az út egyenetlenségei, valamint a jármű mozgásállapot változásai folyamatosan módosítják a karosszéria dőlésszögét. Míg a CARLA alapértelmezett  motorja hajlamos túlságosan stabil, a fizikai zajoktól mentes kameraképpel operálni, addig a BeamNG.tech saját fejlesztésű, soft-body fizikája kiemelkedő pontossággal szimulálja a jármű viselkedését a feladatom szempontjából.
 
-\paragraph{A választott hardver
-specifikációja}\label{a-vuxe1lasztott-hardver-specifikuxe1ciuxf3ja-1}
+\subsubsection{Fejlesztői környezet, programozási nyelv, könyvtárak és eszközök}
 
-\begin{itemize}
-\item
-  Processzor (CPU): Intel Core i5-8300H (4 mag, 8 szál, alapórajel: 2.30
-  GHz, Turbo: 4.00 GHz) -- x86-64 architektúra.
-\item
-  Memória (RAM): 8 GB DDR4 (2667 MHz).
-\item
-  Grafikus gyorsító (GPU): NVIDIA GeForce GTX 1050 Ti (4 GB GDDR5
-  dedikált VRAM, Pascal architektúra).
-\end{itemize}
+A rendszerfejlesztés elsődleges programozási nyelve a Python. Ez a nyelv a jelenlegi iparági szabvány a mesterséges intelligencia és a gépi látás területén. Mégis a fő indok a Python mellett az, hogy a BeamNG.tech szimulátor hivatalos kommunikációs interfésze (BeamNGpy) is Python alapú, ami, így garantálja a komponensek zökkenőmentes integrációját a szimulátorba. Továbbá a projekt kulcstechnológiái (PyTorch, OpenCV, Ultralytics YOLO) natív Python támogatással rendelkeznek. 
 
-\subsubsection{\texorpdfstring{Kamera }{Kamera }}\label{kamera}
+Alkalmazott könyvtárak és keretrendszerek:
 
-A rendszer vizuális bemenetét egy Logitech C270 típusú webkamera
-biztosítja. A szenzor kiválasztásánál a költséghatékonyság és a
-széleskörű elérhetőség volt a fő szempont, bizonyítva, hogy a
-fejlesztett algoritmus képes olcsó, kereskedelmi forgalomban kapható
-hardveren is megbízhatóan működni.
+BeamNGpy: A rendszer egyik legfontosabb specifikus könyvtára. Ez a nyílt forráskódú Python API biztosítja a kétirányú kommunikációt a BeamNG.tech szimulátorral. Ezen keresztül történik a virtuális környezet inicializálása, a vizsgált jármű (ego-vehicle) monokuláris kamerájának paraméterezése, a képi adatfolyamok kinyerése, valamint a validáláshoz szükséges fizikai referenciaadatok (ground truth metrikus pozíciók, járműorientáció) valós idejű lekérdezése.
 
-\paragraph{A választott hardver
-specifikációja}\label{a-vuxe1lasztott-hardver-specifikuxe1ciuxf3ja-2}
+OpenCV (Open Source Computer Vision Library): A képfeldolgozási pipeline váza. Nem csupán egy hagyományos videofolyam, hanem a BeamNGpy által másodpercenként szolgáltatott egyedi képkockák beolvasásáért és előfeldolgozásáért felel. Továbbá ez a könyvtár biztosítja a laterális távolságméréshez szükséges geometriai és perspektív transzformációk végrehajtását, valamint a detektált kátyúk és a számított metrikus adatok képernyőn történő valós idejű vizuális megjelenítését.
+
+NumPy (Numerical Python): A rendszer matematikai motorja. A memóriafolytonos tárolást alkalmazó NumPy tömbök (ndarray) nagyságrendekkel gyorsabb adatkezelést tesznek lehetővé. A projektben a kamerából származó pixeladatok mátrixként való kezelésén túl a BeamNG.tech-ből érkező téri adatok feldolgozására, valamint a 2D-3D lokalizációhoz elengedhetetlen lineáris algebrai műveletek (pl. homográfia mátrixszal való szorzás, vektorizált koordináta-transzformációk) gyors elvégzésére szolgál.
+
+Ultralytics YOLO (v10) és PyTorch: A kátyúdetektálást végző mesterséges intelligencia modul magja. A PyTorch egy alacsony szintű mélytanulási keretrendszer, amely dinamikus számítási gráfokat használ, míg az Ultralytics könyvtár egy magas szintű absztrakciót biztosít a YOLO (You Only Look Once) architektúra tanításához, finomhangolásához és futtatásához. Ez a modul felel azért, hogy a szimulált képeken a kátyúk 2D-s képkoordinátáit a képtranszformációs fázis számára azonosítsa.
+
+Fejlesztői eszközök:
 
 \begin{itemize}
-\item
-  Felbontás: HD 720p (1280x720 pixel). A választás kompromisszumos
-  megoldás a részletgazdagság és a számítási igény között.
-\item
-  Képfrissítési frekvencia: 30 FPS (képkocka/másodperc). Ez az érték
-  33,3 ms-os időablakot definiál minden egyes képkocka feldolgozására. A
-  30 FPS biztosítja a folyamatos mozgásérzetet és a megfelelő
-  reakcióidőt városi sebesség (maximum 70 km/h) mellett, ahol az autó
-  egy frame alatt (70 km/h esetén) kb. 64 cm-t tesz meg.
-\item
-  Látószög (FOV): 60°-os diagonális látószög, amely a szélvédő mögé, a
-  visszapillantó tükör síkjába helyezve optimális lefedettséget biztosít
-  a jármű előtti aszfaltozott út megfigyelésére.
-\item
-  Adatkapcsolat: USB 2.0 interfész, amely biztosítja a tömörített
-  videófolyam átvitelét a futtató környezet felé.
+	\item
+	IDE: Visual Studio Code (könnyűsúlyú kódolás és a Python környezetek egyszerű integrációja).
+	\item
+	Verziókezelés: Git (a forráskód változásainak követésére).
+	\item
+	Csomagkezelés: Pip / Anaconda (a függőségek és virtuális környezetek
+	izolált kezelésére).
 \end{itemize}
 
-\subsubsection{Szoftver technológiák}\label{szoftver-technoluxf3giuxe1k}
 
-A szoftverrendszer implementációja során a modern számítógépes látás és
-mélytanulás ipari szabványainak tekinthető, nyílt forráskódú
-technológiai vermet (tech stack) alkalmaztam. A választásnál a
-modularitás, a széleskörű dokumentáltság és a hardveres gyorsítás (GPU)
-támogatása volt a döntő szempont.
+\subsection{Modulok felépítése}
 
-Az elsődleges fejlesztés nyelve a Python 3.10\textbf{+}. Bár a C++
-futási sebessége gyorsabb, a Python mellett szólt a rendkívül gazdag
-könyvtári támogatottság, a gyors prototípuskészítés lehetősége és a kód
-olvashatósága. A sebességkritikus műveleteket (pl. mátrixszorzás,
-konvolúció) nem maga a Python értelmező, hanem a háttérben futó, C/C++
-nyelven írt optimalizált könyvtárak (OpenCV, NumPy, PyTorch) végzik, így
-a nyelvválasztás nem jelent szűk keresztmetszetet a valós idejű
-működésben.
+\subsubsection{Adatmodell és struktúrák}
 
-\paragraph{Alkalmazott könyvtárak és
-keretrendszerek}\label{alkalmazott-kuxf6nyvtuxe1rak-uxe9s-keretrendszerek}
-
-OpenCV (Open Source Computer Vision Library) ez a könyvtár biztosítja a
-képfeldolgozási pipeline vázát. A videófolyam beolvasása
-(cv2.VideoCapture), a kamera optikai torzításának valós idejű
-korrekciója (undistort), a perspektív transzformációk végrehajtása (IPM)
-a távolságméréshez, valamint a detektált objektumok és adatok vizuális
-megjelenítése a képernyőn.
-
-NumPy (Numerical Python) a rendszer matematikai motorja. A Python
-beépített listáival ellentétben a NumPy tömbök (ndarray)
-memóriafolytonos tárolást alkalmaznak, ami nagyságrendekkel gyorsabb
-adatkezelést tesz lehetővé. A projektben a pixeladatok mátrixként való
-kezelése és a 3D lokalizációhoz szükséges lineáris algebrai műveletek
-(pl. homográfia mátrixszal való szorzás, vektorizált
-koordináta-transzformációk) elvégzése alkalmas.
-
-Ultralytics YOLO (v8/v11) \& PyTorch A kátyúdetektálást végző
-mesterséges intelligencia modul alapja. A PyTorch egy alacsony szintű
-mélytanulási keretrendszer, amely dinamikus számítási gráfokat használ,
-míg az Ultralytics könyvtár egy magas szintű absztrakciót biztosít a
-YOLO (You Only Look Once) architektúra egyszerű tanításához és
-futtatásához.
-
-CUDA Toolkit és cuDNN (NVIDIA) A hardver és a szoftver közötti híd. Ez
-az API teszi lehetővé, hogy a Python kód (a PyTorch keretrendszeren
-keresztül) közvetlenül hozzáférjen a GPU párhuzamos számítási
-egységeihez.
-
-\paragraph{Fejlesztői eszközök}\label{fejlesztux151i-eszkuxf6zuxf6k}
-
-\begin{itemize}
-\item
-  IDE: Visual Studio Code / PyCharm (kódolás és debuggolás).
-\item
-  Verziókezelés: Git (a forráskód változásainak követésére).
-\item
-  Csomagkezelés: Pip / Anaconda (a függőségek és virtuális környezetek
-  izolált kezelésére).
-\end{itemize}
-
-\subsection{Modulok felépítése}\label{modulok-feluxe9puxedtuxe9se}
-
-\subsubsection{Adatmodell és
-struktúrák}\label{adatmodell-uxe9s-struktuxfaruxe1k}
-
-\paragraph{Kátyú objektum főbb
-attribútumai}\label{kuxe1tyuxfa-objektum-fux151bb-attribuxfatumai}
+\paragraph{Kátyú objektum főbb attribútumai}
 
 A rendszer központi adategysége a Kátyú objektum. Amikor a detektor
 felismer egy úthibát, példányosít egy ilyen objektumot, amely a
@@ -223,8 +121,7 @@ attribútumokkal.
   képest.
 \end{itemize}
 
-\paragraph{Kamera objektum főbb
-attribútumai}\label{kamera-objektum-fux151bb-attribuxfatumai}
+\paragraph{Kamera objektum főbb attribútumai}
 
 Ez az osztály felelős az autóra rögzített kamera elhelyezéséének pontos
 paramétereiért.
@@ -242,7 +139,7 @@ paramétereiért.
   A kamera bólintási szöge (0\_pitch): 0,05236 radiánban (3fok).
 \end{itemize}
 
-\subsubsection{Fő vezérlési ciklus}\label{fux151-vezuxe9rluxe9si-ciklus}
+\subsubsection{Fő vezérlési ciklus}
 
 A rendszer működését egy központi vezérlőmodul koordinálja. Ennek a
 modulnak a feladata a rendszerindítás, az erőforrások menedzselése, a
@@ -251,8 +148,7 @@ a futás felügyelete. Programozástechnikai szempontból ez a modul
 tartalmazza a belépési pontot (main függvény) és a végtelen ciklust
 (while loop).
 
-\paragraph{Inicializálás és erőforrás
-foglalás}\label{inicializuxe1luxe1s-uxe9s-erux151forruxe1s-foglaluxe1s}
+\paragraph{Inicializálás és erőforrás foglalás}
 
 A program indításakor a vezérlő első feladata a szükséges statikus
 erőforrások betöltése a memóriába, még a feldolgozási ciklus megkezdése
@@ -264,8 +160,7 @@ hogy az első képkocka feldolgozása már ne szenvedjen késedelmet.
 Kamerakapcsolat létesítés a cv2.VideoCapture interfész megnyitása és a
 kamera paramétereinek (felbontás, FPS) ellenőrzése.
 
-\paragraph{A valós idejű feldolgozási
-ciklus}\label{a-valuxf3s-idejux171-feldolgozuxe1si-ciklus}
+\paragraph{A valós idejű feldolgozási ciklus}
 
 A rendszer egy végtelen ciklus működteti, amely addig fut, amíg a
 felhasználó leállítási parancsot nem ad. A cikluson belül szigorú
@@ -303,63 +198,28 @@ iterációjában figyeli a billentyűzet-eseményeket, és a megszakítási
 kérelem észlelésekor azonnal kilép a végrehajtási hurokból, elindítva a
 szabályos leállítási mechanizmust.
 
-\subsubsection{Előfeldolgozás}\label{elux151feldolgozuxe1s}
+\subsubsection{Előfeldolgozás}
 
-\paragraph{Torzításmentesítés}\label{torzuxedtuxe1smentesuxedtuxe9s}
-
-A modul a rendszerindításkor betöltött kalibrációs paraméterek
-(kamera-mátrix és torzítási együtthatók) alapján minden egyes képkockán
-geometriai korrekciót (cv2.undistort) végez. Ez az eljárás megszünteti a
-lencse által okozott görbületeket a képek szélein.
-
-\paragraph{Képarány helyes
-átméretezés}\label{kuxe9paruxe1ny-helyes-uxe1tmuxe9retezuxe9s}
-
-A szoftver a korrigált képet a YOLO által megkövetelt fix felbontásra
+Képarány helyes átméretezését a korrigált képet a YOLO által megkövetelt fix felbontásra
 640x640 pixel méretezi át (cv2.resize). Az eredeti képarány megtartása
 mellett skálázza a képet, a fennmaradó üres területeket
 (cv2.copyMakeBorder) pedig kitöltő színnel (padding) látja el. Ezzel
 elkerülhető a detektált objektumok alakjának torzulása.
 
-\paragraph{Normalizálás és
-formázás}\label{normalizuxe1luxe1s-uxe9s-formuxe1zuxe1s}
-
-A képadat utolsó transzformációs lépése a PyTorch keretrendszer bemeneti
+Majd a normalizálás és formázás transzformációs lépések a PyTorch keretrendszer bemeneti
 követelményeinek teljesítése. A színteret BGR-ről konvertálja RGB-re, a
 pixelértékeket a {[}0, 1{]} tartományba normalizálja, végül a mátrixot a
 GPU-feldolgozáshoz szükséges tenzor formátummá alakítja.
 
-\subsubsection{Kátyú detektálás}\label{kuxe1tyuxfa-detektuxe1luxe1s}
+A kátyú detektálását az Ultralytics YOLOv10 architektúrája végzi. A modell kiválasztását a  \ref{rendelkezesre-allo-nyilt-adathalmazok-es-versenyek-a-temaban}. pontban (\pageref{rendelkezesre-allo-nyilt-adathalmazok-es-versenyek-a-temaban}. oldalon) tárgyalt Optimized Road Damage Detection Challenge, nemzetközi verseny hivatalos rangsora és eredményei indokolják. A megmérettetésen az első helyezést elérő FRDC-SH csapat megoldása a YOLOv10 modellt alkalmazta, amellyel kiemelkedő egyensúlyt teremtettek a sebesség és a detektálási pontosság között.
 
-A detektálási feladatot az Ultralytics által fejlesztett YOLOv8
-architektúra legkisebb, erőforrás optimalizált változata, a YOLOv8 Nano
-(v8n) látja el. A választás azért esett erre a variánsra, mert a modell
-paraméterszáma (kb. 3.2 millió) és számítási igénye (FLOPs) rendkívül
-alacsony, így a rendelkezésre álló laptop (GTX 1050 Ti) is biztosítható
-a stabil 30 FPS feletti futási sebesség. A rendszer a saját adathalmazon
-előtanított súlyfájlt (.pt kiterjesztésű modell) tölti be a GPU
-memóriájába az inicializálás során.
+A hálózat betanítása során alkalmazott módszertan a transfer learning-ra épül. Jelentős fejlesztési előnyt biztosít, hogy a győztes FRDC-SH csapat a GitHub platformon publikálta a előtanított modelljük súlyfájljait.  
 
-\paragraph{Tanítás
-implementáció}\label{tanuxedtuxe1s-implementuxe1ciuxf3}
+Ennek köszönhetően a tanítási folyamatot nem az alapoktól kell elkezdeni. A rendszer betölti a nagy kiterjedésű, nemzetközi adathalmazokon előzetesen betanított és optimalizált súlyokat. Ezt a folyamatot kizárólag egy célzott finomhangolási fázis követi, amelyhez a dedikált BeamNG.tech szimulációs környezetből kinyert, 2D-s virtuális kameraképeket használom fel. Ez a megközelítés garantálja, hogy a modell a szimulátor specifikus vizuális és dinamikai sajátosságaira optimalizálódjon, miközben az előtanított súlyok révén drasztikusan csökken a szükséges tanítási idő és a hardveres erőforrásigény.
 
-A YOLO algoritmus létrehozása során a Transfer Learning módszertanát
-alkalmazom, amely lehetővé teszi a nagy adatbázisokon megszerzett tudás
-átörökítését.
+\subsubsection{Kátyú lokalizálás}
 
-Előtanítás során a modell súlyainak inicializálása egy olyan YOLOv8 Nano
-modellen alapul, amelyet előzetesen a nemzetközileg elismert Road Damage
-Dataset (RDD) több tízezer képén tanítottak be. Ez a lépés biztosítja,
-hogy a hálózat elsajátítsa az úthibák általános vizuális jellemzőit.
-
-Finomhangolásban a RDD-n előtanított alapmodellt ezt követően egy kisebb
-elemszámú, de specifikusabb publikus adathalmazon tanítom tovább. Ez a
-folyamat pontosította a modell detektálási képességét, növelve a
-felismerés megbízhatóságát a célkörnyezetben.
-
-\subsubsection{Kátyú lokalizálás}\label{kuxe1tyuxfa-lokalizuxe1luxe1s}
-
-\paragraph{Számítás menete}\label{szuxe1muxedtuxe1s-menete}
+\paragraph{Számítás menete}
 
 A számítás megkezdése elött megvizsgálja a kátyú osztály példánynak a
 megbízhatóság (confidence) értékét, ha az nagyobb mint 0,5 akkor
@@ -498,8 +358,7 @@ függvényét alkalmazza a szoftver. A keret színe és vastagsága
 konfigurálható, biztosítva a láthatóságot változó fényviszonyok mellett
 is.
 
-\paragraph{Metrikus adatok
-kijelzése}\label{metrikus-adatok-kijelzuxe9se}
+\paragraph{Metrikus adatok kijelzése}
 
 A puszta detektáláson túl a rendszer legfontosabb kimenete a
 távolságbecslés. A modul a boounding box közvetlen közelében, szöveges
@@ -508,8 +367,7 @@ fizikai távolságokat. A szoftver a putText eljárás segítségével írja ki
 a jármű orrától mért longitudinális (Y\_long) és a középvonaltól mért
 laterális (X\_lat) távolságot méterben vagy centiméterben.
 
-\paragraph{Rendszerállapot és
-teljesítmény-monitorozás}\label{rendszeruxe1llapot-uxe9s-teljesuxedtmuxe9ny-monitorozuxe1s}
+\paragraph{Rendszerállapot és teljesítmény-monitorozás}
 
 A fejlesztés és a valós idejű tesztelés során kritikus fontosságú a
 hardveres erőforrások kihasználtságának nyomon követése. A modul a

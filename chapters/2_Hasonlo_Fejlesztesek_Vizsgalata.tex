@@ -54,12 +54,12 @@ megtéveszthetőek lehetnek a későbbiekben. A szűrés lépések után, már
 csak olyan fekete szegmensek maradnak a képen, amelyek méretük és
 alakjuk alapján kátyút reprezentálhatnak. Előfordulhat, hogy az árnyék
 alakja és nagysága eltérő a kátyún belül, ezt szemlélteti a
-\ref{fig:katyu_arnyék}. ábra. \cite{koch_pothole_2011}
+\ref{fig:katyu_arnyék}. ábra. \cite{kochPotholeDetectionAsphalt2011}
 
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=0.4\textwidth]{img/abra1.jpg} 
-	\caption{Kátyún belüli árnyékok szemléltetése \cite{abed_analysis_2023}}
+	\caption{Kátyún belüli árnyékok szemléltetése \cite{abedAnalysisPredictionPothole2023}}
 	\label{fig:katyu_arnyék}
 \end{figure}
 
@@ -111,21 +111,21 @@ szórása. Kiszámolják mindkét vektor hosszát. A vektor hossza itt azt
 méri, hogy összességében mennyire erős a textúra az adott régióban az 5
 mért jellemző alapján. Ha az adott folt belső vektorának a hossza
 nagyobb, mint a külsőé akkor a belső textúra kátyút jelöl. Ellenkező
-esetben nem tekinthető kátyúnak az adott folt. \cite{koch_pothole_2011}
+esetben nem tekinthető kátyúnak az adott folt. \cite{kochPotholeDetectionAsphalt2011}
 
 A cikkben leírt módszer fő előnye, hogy textúra összehasonlítást
 alkalmaz a hamis pozitívumok (pl. olajfoltok, árnyékok) hatékony
 kiszűrésére, amivel figyelemre méltó, „86\%-os pontosságot ér el''
-klasszikus képfeldolgozó módszerként \cite{koch_pothole_2011}. A cikk nem közöl konkrét
+klasszikus képfeldolgozó módszerként \cite{kochPotholeDetectionAsphalt2011}. A cikk nem közöl konkrét
 futási időt, de a többlépcsős képfeldolgozási folyamatok miatt, szinte
 biztos, hogy magas számítási idővel járnak, így egy az egyben nem
 használható valós idejű kátyú detektálásra. A szegmentálás
 eredményessége erősen függ a fényviszonyoktól. A szerzők maguk is
 elismerik, hogy olyan körülmények között, ahol minimális az árnyék (pl.
-a nap magasan, merőlegesen süt), a módszer hibázhat \cite{koch_pothole_2011}. A módszer
+a nap magasan, merőlegesen süt), a módszer hibázhat \cite{kochPotholeDetectionAsphalt2011}. A módszer
 nem adaptív, így valós idejű rendszer esetén nem alkalmazható ugyanis
 több kritikus paramétert is használnak, amelyeket „manuálisan kellett
-beállítani egy 50 képből álló tanító adathalmazon'' \cite{koch_pothole_2011}.
+beállítani egy 50 képből álló tanító adathalmazon'' \cite{kochPotholeDetectionAsphalt2011}.
 
 \subsubsection{Pothole Detection with Image Processing and Spectral
 	Clustering}
@@ -139,20 +139,20 @@ féle küszöbölés alkalmaznak. A végeredmény egy bináris kép lesz,
 mégpedig úgy, ha az adott pixel kisebb vagy egyenlő a küszöb értékkel(T)
 akkor objektum, azaz 1, ha az adott pixel nagyobb, mint T akkor háttér,
 azaz 0. Látható, hogy a \ref{fig:zajos_binaris}. ábra zajos
-és a kátyún túl a repedések, árnyékok és egyéb vonalak is feketék.\cite{buza_pothole_2013}
+és a kátyún túl a repedések, árnyékok és egyéb vonalak is feketék.\cite{buzaPotholeDetectionImage2013}
 
 \begin{figure}[htbp]
 	\centering
 	\begin{minipage}{0.4\textwidth}
 		\centering
 		\includegraphics[width=\linewidth]{img/abra2_1.png}
-		\caption{Zajos bináris kép \protect\cite{miller_distress_2014}}
+		\caption{Zajos bináris kép \protect\cite{millerDistressIdentificationManual2014}}
 		\label{fig:zajos_binaris}
 	\end{minipage}\hfill
 	\begin{minipage}{0.4\textwidth}
 		\centering
 		\includegraphics[width=\linewidth]{img/abra2_2.png}
-		\caption{Szűrt bináris kép \protect\cite{miller_distress_2014}}
+		\caption{Szűrt bináris kép \protect\cite{millerDistressIdentificationManual2014}}
 		\label{fig:szurt_binaris}
 	\end{minipage}
 \end{figure}
@@ -199,12 +199,12 @@ szürkeárnyalatos kép klaszterezéséből kapott eredményt felhasználva, az
 algoritmus 2-őt futtatják, ami seed points-okat (mag pontokat) hoz
 létre, ezekkel a pontokkal összekapcsolja a kétféleképpen feldolgozott
 képet. A \ref{fig:modszer_vegeredmenye}. ábra szemlélteti, a mag
-pontokat és az összekapcsolt végeredményt. \cite{buza_pothole_2013}
+pontokat és az összekapcsolt végeredményt. \cite{buzaPotholeDetectionImage2013}
 
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=0.4\textwidth]{img/abra3.png}
-	\caption{A cikkben bemutatott módszer végeredménye \protect\cite{miller_distress_2014}}
+	\caption{A cikkben bemutatott módszer végeredménye \protect\cite{millerDistressIdentificationManual2014}}
 	\label{fig:modszer_vegeredmenye}
 \end{figure}
 
@@ -212,7 +212,7 @@ A cikkben leírt módszer fő előnye, hogy egy olcsó, felügyelet nélküli
 eljárás, amely nem igényel drága berendezéseket vagy külön tanítási
 fázist. A spektrális klaszterezés alkalmazásával a tesztadatbázison
 „81\%-os pontosságot'' értek el, ezen felül „rough estimation'' (durva
-becslést) adtak a kátyúk területére \cite{buza_pothole_2013}. Ilyesfajta durva becslés
+becslést) adtak a kátyúk területére \cite{buzaPotholeDetectionImage2013}. Ilyesfajta durva becslés
 jól jöhet a későbbiekben, amikor a kátyú méretét és elhelyezkedését
 fogom vizsgálni. Hátránya azonban, hogy ez a becslés valóban csak
 közelítő, mivel a végső területet egy egyszerű téglalap alapján számolja
@@ -221,9 +221,9 @@ feldolgozást, ami részben érthető, hiszen a hibás képkockák kiválasztás
 manuálisan végzik. Bár a teszteléshez használt hardver alapján „Intel
 Core2 2.80GHz CPU és 4GB RAM'' a valós idejűség akkoriban nem volt
 reális cél, modern számítási kapacitással ez ma már megoldható lenne
-\cite{buza_pothole_2013}. A valós idejű működés eléréséhez azonban elengedhetetlen a
+\cite{buzaPotholeDetectionImage2013}. A valós idejű működés eléréséhez azonban elengedhetetlen a
 teljes folyamat automatizálása, kezdve egy olyan algoritmussal, amely
-képes a videófolyamból pontosan, emberi beavatkozás nélkül kiszűrni a
+képes a videofolyamból pontosan, emberi beavatkozás nélkül kiszűrni a
 releváns, hibát(kátyút) tartalmazó képkockákat.
 
 \subsubsection{\texorpdfstring{Pothole detection on asphalt pavements from
@@ -274,15 +274,15 @@ klaszterezés során azonosított potenciális kátyú pixeleket tartalmazza,
 és egy maszk képet, ami az eredeti wavelet-szűrt kép intenzitásait
 használja, felső korlátként. A két bement alapján újra felépíti a képet
 a markerek alapján, de csak azokat a részeit tartja meg, amelyeket a
-maszk "megenged". \cite{ouma_pothole_2017}
+maszk "megenged". \cite{oumaPotholeDetectionAsphalt2017}
 
 Ez a hibrid módszer kecsegtető és érdekes részekből épül fel. Az elért
 „87.5\%-os átlagos pontosság'' és az hogy nem igényel tanító adatbázist,
-nagyon jó eredmény \cite{ouma_pothole_2017}. Ugyanakkor jelentős hátrányai is vannak,
+nagyon jó eredmény \cite{oumaPotholeDetectionAsphalt2017}. Ugyanakkor jelentős hátrányai is vannak,
 amelyek korlátozzák a gyakorlati alkalmazhatóságát. A legkritikusabb
 probléma a rendkívül lassú, „95 másodperces átlagos futási idő
 képenként'', ami teljesen kizárja, hogy egy az egyben fel tudjam
-használni ezt a megvalósítást \cite{ouma_pothole_2017}. Bár figyelembe véve a szűrés
+használni ezt a megvalósítást \cite{oumaPotholeDetectionAsphalt2017}. Bár figyelembe véve a szűrés
 részletességét, a klaszterezést, majd pedig az iteratív morfológiai
 rekonstrukciót, ez érthető futási idő még hardvertől függetlenül is. Az
 a baj ezzel a megoldással, hogy a Fuzzy c-means clustering-et megelőzően
@@ -316,7 +316,7 @@ meghatározhatóak olyan markerek, mint biztos háttér és biztos előtér
 (objektum), illetve ismeretlen régió. Végül a marker térképet
 felhasználva az eredeti RGB képen meghívják a watershed (vízgyűjtő)
 algoritmus, ami az ismeretlen régiókat elválasztja hátérré vagy
-előtérré. \cite{chung_watershed-based_2019}
+előtérré. \cite{chungWatershedbasedRealtimeImage2019}
 
 Nagyon inspirálónak tartom a ROI használatát, mert az általános, hogy a
 képeken több út (háttér) szerepel, mint kátyú (objektum), ROI
@@ -325,10 +325,10 @@ vannak pontos mérési adatok FPS (Frames Per Second (képkocka
 másodpercenként))-ben megadva, ebből az vonható le következtésként, hogy
 minél több kátyú vagy kátyú részlet van a képen, annál rosszabb a
 feldolgozás sebessége, legrosszabb mérés 26,4 FPS a legjobb pedig 37,4
-FPS \cite{safyari_review_2024}. A „képek 640×480 pixel felbontásúak'' voltak és az
+FPS \cite{safyariReviewVisionBasedPothole2024}. A „képek 640×480 pixel felbontásúak'' voltak és az
 „algoritmus Intel Core i5 5255u processzorral és 4GB DDR3 memóriával
 ellátott számítógép futatta, 1600 MHz-es buszon'', GPU-t nem
-említenek \cite{chung_watershed-based_2019}. Itt felmerült bennem az a lehetőség, hogy GPU
+említenek \cite{chungWatershedbasedRealtimeImage2019}. Itt felmerült bennem az a lehetőség, hogy GPU
 segítségével lehetne gyorsítani azokat az eseteket, amikor több kátyú
 van egyszerre a képen. Kátyú száma ROI kellene létrehozni, és azok
 párhuzamosan GPU-n vagy akár CPU-n is futhatnának. A 30 FPS és a feletti
@@ -344,14 +344,14 @@ képeken, amin kevés zaj van azokon a küszöbérték meghatározása jó
 működik jellemzően ilyenek voltak a példaképek a cikkben. Az objektum
 mérete, az objektum helyzete és gyengébb, zajos képminőség befolyásolja
 a teljesítményt és előfeldolgozást kell végezni a képen a jó végeredmény
-érdekében. \cite{goh_performance_2018}
+érdekében. \cite{gohPerformanceAnalysisImage2018}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Konvolúciós neurális hálózatokon alapuló úthibadetektálás}
 
 Az előző
 \nameref{klasszikus-kepfeldolgozason-alapulo-uthibadetektálas} című fejezetben,
 általam bemutatott algoritmusok „műveleteket hajtanak végre a bemeneti
-képeken, hogy hasznos információkat nyerjenek ki belőlük'' \cite{r_comprehensive_2022}.
+képeken, hogy hasznos információkat nyerjenek ki belőlük'' \cite{rComprehensiveReviewAsphalt2022}.
 Ezek a képfeldolgozó algoritmusok, több egymásra épülő merev lépésekből
 állnak (előfeldolgozás, szegmentálás, jellemzőkinyerés, osztályozás).
 Bár a teljesítményük 90\% körül mozog, de a számítási idő magasnak
@@ -376,7 +376,7 @@ képekhez hasonló, rácsszerkezetű adatok feldolgozására és elemzésére
 fejlesztettek ki. A hálózat három rétegből tevődik össze, konvolúciós
 réteg, ami a bementi kép vagy a future map (jellemző térkép) pixel
 értékein halad végig egy vagy több kernel-lel (filter, csúszó ablak) és
-elvégzi a konvolúció műveletet. Az így létrejött jellemző tértkép(ek) a
+elvégzi a konvolúció műveletet. Az így létrejött jellemző térkép(ek) a
 csúszó ablak(ok) által kiemelt tulajdonságokat tartalmazza. Ezt követően
 a pooling layer (tömörítő réteg) a jellemző térképen szereplő
 tulajdonságokat felerősíti, és tovább csökkenti a dimenzióméretet.
@@ -387,12 +387,12 @@ arra, hogy az adathalmazban rejlő komplex, nem lineáris mintákat,
 kernelek súlyparamétereit a hálózat a tanítási folyamat során (például:
 backpropagation) finom hangolja. Ez az optimalizálás biztosítja, hogy a
 hálózat által kinyert jellemzők a kívánt osztályozási eredményhez
-vezessenek, minimalizálva a hibát a tanító adathalmazon. \cite{r_comprehensive_2022}
+vezessenek, minimalizálva a hibát a tanító adathalmazon. \cite{rComprehensiveReviewAsphalt2022}
 
 A konvolúciós neurális hálózatokon belül három számítógépes látása
 feladat típust különböztetünk meg, image classification (kép
 osztályozás), object detection (objektum detektálás) és semantic
-segmentation (szemantikus szegmentálás) \cite{r_comprehensive_2022}. A kép osztályozás
+segmentation (szemantikus szegmentálás) \cite{rComprehensiveReviewAsphalt2022}. A kép osztályozás
 esetén a kimenet egy címke lesz, például a kép tartalmaz kátyút, vagy a
 kép nem tartalmaz kátyút. Tehát ebben az esetben a képen szereplő kátyúk
 darabszámáról, és a betöltött pozíciójukról, sem ad információt. Az
@@ -402,7 +402,7 @@ is jelöli a képen. A szemantikus szegmentálás szolgáltatja a
 legrészletesebb információt a képről, minden egyes pixelhez címkét
 rendel. Kijelenthető, hogy jelenleg valós idejű kátyú detektálásra, az
 objektum detektálás típus használható a legjobban, ezért a továbbiakban
-csak ezeket fogom részletezni. \cite{ma_computer_2022}
+csak ezeket fogom részletezni. \cite{maComputerVisionRoad2022}
 
 \subsubsection{Kétfázisú objektumdetektálás Faster
 	R-CNN}
@@ -442,12 +442,12 @@ osztályozást. Eldönti, hogy a dobozban kátyú, autó vagy háttér van.
 Továbbá, finom hangolja a dobozok koordinátáit, hogy az jobban
 illeszkedjen az objektumra. Tehát a folyamat két egymásra épülő lépéből
 áll, első a javaslat, második az osztályozás, ezért hívják kétfázisú
-detektornak. \cite{ren_faster_2017}
+detektornak. \cite{renFasterRCNNRealTime2017}
 
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=0.4\textwidth]{img/abra4.png} 
-	\caption{Faster R-CNN felépítése \protect\cite{ren_faster_2017}}
+	\caption{Faster R-CNN felépítése \protect\cite{renFasterRCNNRealTime2017}}
 	\label{fig:faster_rcnn_felepites}
 \end{figure}
 
@@ -480,7 +480,7 @@ bonyolultsága, a megosztott jellemzők optimalizálása a cikkben egy
 komplex, 4 lépéses alternating training (váltott tanítási) sémát követ.
 Habár általánosságban nézve gyorsnak számít, de ahogy a publikáció címe
 is jelzi ez "csak" valós idejű megvalósítás felé vezető
-megoldás. \cite{ren_faster_2017}
+megoldás. \cite{renFasterRCNNRealTime2017}
 
 \subsubsection{Egyfázisú objektumdetektálás You Only Look Once v1}
 
@@ -495,7 +495,7 @@ A YOLO regressziós problémaként fogja fel a detektálást. Nincs szükség
 komplex, többlépcsős folyamatokra. Egyetlen konvolúciós neurális
 hálózatot használnak, és „a rendszernek csak egyszer kell ránéznie a
 bementi képre, hogy prediktálni tudja a képen az objektumokat és a
-hozzájuk tartozó pozíciót''. \cite{redmon_you_2016}
+hozzájuk tartozó pozíciót''. \cite{redmonYouOnlyLook2016}
 
 Első lépésben a bementi 448×448-as felbontású képet felosztja S×S méretű
 grid-ekre (rácsokra, cellákra), ha egy objektum a középpontja belesik az
@@ -524,9 +524,9 @@ valószínűséget számolnak a cella vizuális tartalma alapján. Tehát minden
 egyes cellához tartozik egydarab 20 elemű one hot vector, ami
 tartalmazza a cellához tartozó osztály valószínűségeket. Végül ezeket a
 predikciókat egy tesorba (többdimenziós adattároló) helyezi, aminek a
-dimenzió szám képlete a következő: \cite{redmon_you_2016}
+dimenzió szám képlete a következő: \cite{redmonYouOnlyLook2016}
 
-„$S \times S \times (B \times 5 + C)$”\cite{redmon_you_2016}
+„$S \times S \times (B \times 5 + C)$”\cite{redmonYouOnlyLook2016}
 
 Ez a tensor a hálózat feje, adja meg a hálózat végső kimenetét, a
 cikkben B=2-vel (egy cellában két bounding box javaslat jön létre), de a
@@ -578,7 +578,7 @@ hátteret tartalmaz az adott cella, akkor 0.5 szeresére csökkentik az
 objektumot nem tartalmazó cella "büntetését". Így teremtenek egyensúlyt
 a tanítás során az eltérő cellák és azok eltérő előfordulása között.
 
-Összeségében a YOLO (You Only Look Once) egy forradalmian új,
+Összességében a YOLO (You Only Look Once) egy forradalmian új,
 egységesített objektumdetektálási megközelítés, amely szakított a
 korábbi, lassú és többlépcsős (pl. R-CNN-féle) módszerekkel. Ennek az
 egységes architektúrának a meghatározó előnye az extrém sebesség,
@@ -589,7 +589,7 @@ korábbi régió alapú módszerek, és jobban generalizál (általánosít). A
 felsorolt tulajdonságok miatt nagy valószínűséggel ezt fogom használni a
 kátyúk detektálásához. Ugyanakkor a módszer hátránya a pontosság terén
 fellelhető, mivel a YOLO több lokalizációs hibát vét, és nehezebben
-birkózik meg a kis méretű objektumok pontos helymeghatározásával. \cite{redmon_you_2016}
+birkózik meg a kis méretű objektumok pontos helymeghatározásával. \cite{redmonYouOnlyLook2016}
 
 2016-óta számos YOLO verzió jelent meg, amelyek fejlesztése már nem
 feltétlenül az előbb bemutatott első verzió szerzőihez kötődik, hanem
@@ -604,7 +604,7 @@ PANet) bevezetését. Valamint az alapvető detektálási stratégia
 módosulását, például a Faster R-CNN átvett anchor box, majd az
 anchor-free (horgonymentes) megközelítések alkalmazását. Ezek az
 újítások együttesen tették lehetővé a sebesség és a pontosság folyamatos
-fejlődését \cite{terven_comprehensive_2023}, \cite{hussain_yolo-v1_2023}.
+fejlődését \cite{tervenComprehensiveReviewYOLO2023}, \cite{hussainYOLOv1YOLOv8Rise2023}.
 
 Minden egyes YOLO verziót bemutatása helyett, a következő fejezetben,
 csak a feladatomhoz specifikusan kapcsolódó verziókra térek ki. Tehát
@@ -624,7 +624,7 @@ van kátyú a képen, a bounding box is jó helyen van, IoU), false positive
 van kátyú a képen és a bounding box rossz helyen van). False negative
 (FN, pedálú: a modell nem talál kátyút a képen, pedig van kátyú a képen
 csak nem találta meg), true negative (TN, pedálú: nem talál kátyút a
-képen mert valójában nincs is kátyú rajta) \cite{liu_deep_2019}.
+képen mert valójában nincs is kátyú rajta) \cite{liuDeepLearningGeneric2019}.
 
 Intersection over Union (IoU) ez felelős a hálózat által prediktált
 bounding box lefedettségéért, azaz a kimenet mennyire van átfedésben a
@@ -635,15 +635,15 @@ metszetének a területe / két bounding box uniójának a területe, ha a
 kimenet 0 akkor nincs átfedés, ha a kimenet 1 akkor tökéletes az
 átfedés. Küszöbértéket kell meghatározni a IoU-hoz, ha a köszöneteknél
 nagyobb eredményt ad az IoU képlet akkor az true positive kimenetnek
-tekinthető, ellenkező esetben false pozitive-nak \cite{terven_comprehensive_2023}.
+tekinthető, ellenkező esetben false pozitive-nak \cite{tervenComprehensiveReviewYOLO2023}.
 
 Precision (precízió, pontosság) a hálózat kimenetének a megbízhatóságát
 méri, helyes kimenetek száma / összes kimenet száma, képlete: „P = TP /
-(TP + FP)'' \cite{vinoth_lightweight_2024}.
+(TP + FP)'' \cite{vinothLightweightObjectDetection2024}.
 
 Recall (felidézés, érzékenység) ez a metrika az alaposságot méri, mennyi
 kátyút ismer fel a bemeneten, helyesen megtalált objektumok száma /
-összes objektum a képen, képlet: „R = TP / (TP + FN)''\cite{vinoth_lightweight_2024}.
+összes objektum a képen, képlet: „R = TP / (TP + FN)''\cite{vinothLightweightObjectDetection2024}.
 
 Average Precision (AP) a Recall-ból és a Precision-ból számítható
 metrika, ha a precízió küszöbértékét alacsonyra állítjuk akkor sok
@@ -660,16 +660,16 @@ eltérő lépésekkel.
 
 Ezzel szemben a mean Average Precision (mAP) az összes objektumkategória
 átlagát számítja ki, egyetlen számot ad vissza, amit a modell általános
-teljesítményének tekintenek \cite{terven_comprehensive_2023}, \cite{liu_deep_2019}.
+teljesítményének tekintenek \cite{tervenComprehensiveReviewYOLO2023}, \cite{liuDeepLearningGeneric2019}.
 
 \subsubsection{YOLOv5, YOLOv8 és YOLOv10
 	fejlődése}
 
 Az előző \nameref{yolo-metrikak} pontra támaszkodva és a 
-\cite{hussain_yolov5_2024}-forrás alapján hasonlítom össze a címben említett YOLO
+\cite{hussainYOLOv5YOLOv8YOLOv102024}-forrás alapján hasonlítom össze a címben említett YOLO
 verziókat. Ebben az összehasonlításban csak olyan verziókról, és azok
 specifikus változatairól esik szó, amelyek kifejezetten erőforrás
-hatékonyan tudnak működni, valós időben, „edge deployment'' \cite{hussain_yolov5_2024}
+hatékonyan tudnak működni, valós időben, „edge deployment'' \cite{hussainYOLOv5YOLOv8YOLOv102024}
 (peremhálózati eszköz, például: okostelefon, drón, autóba szerelt
 vezérlőegység) környezetben.
 
@@ -685,11 +685,11 @@ Az Ultralytics 2020-ban mutatta be a YOLOv5-öt, ami jelentős ugrást
 hozott teljesítmény és a használhatóság terén is, így gyorsan nagy
 népszerűségre tett szert. Az \ref{tab:yolov5}. táblázat
 szemlélteti az egyes modell méretek közötti különbségeket. A méréseket a
-Microsoft COCO adathalmazon végezték \cite{hussain_yolov5_2024}.
+Microsoft COCO adathalmazon végezték \cite{hussainYOLOv5YOLOv8YOLOv102024}.
 
 \begin{table}[htbp]
 	\centering
-	\caption{YOLOv5 verziók összehasonlítása \protect\cite{hussain_yolov5_2024}}
+	\caption{YOLOv5 verziók összehasonlítása \protect\cite{hussainYOLOv5YOLOv8YOLOv102024}}
 	\label{tab:yolov5}
 	\vspace{0.2cm}
 	
@@ -721,7 +721,7 @@ pontosság társul.
 2023-ban megjelent a YOLOv8 ugyancsak az Ultralytics csapat által, ami a
 YOLOv5 sikeres alapjaira épített, ennek a tovább fejlesztésnek az lett
 az eredménye, hogy jobb átlagos teljesítmény mutatókkal rendelkezik,
-mint elődjei \cite{hussain_yolov5_2024}. A modell gyorsítása mögött pedig az NVIDIA
+mint elődjei \cite{hussainYOLOv5YOLOv8YOLOv102024}. A modell gyorsítása mögött pedig az NVIDIA
 TensorRT optimalizációs szoftver (SDK) áll. A TensorRT kifejezetten mély
 neurális hálózatok optimalizálására fejlesztették ki, NVIDIA GPU-khoz.
 Ezzel segítve azokat a valós idejű rendszerek működését, ahol a sebesség
@@ -731,14 +731,14 @@ tanítják, a minél pontosabb végeredmény elérése érdekében. A tanítás
 befejezte után hajtják végre a kvantálást INT8-ra, TensorRT SDK
 segítségével az adott NVIDIA GPU-ra. Előnye, hogy a modell mérete a
 negyedére csökken, ezáltal a sebességnövekedés extrémnek mondható,
-cserébe viszont pontosság vesztés lép fel \cite{varun_improving_2020} , \cite{vina_optimizing_2025}. A
+cserébe viszont pontosság vesztés lép fel \cite{varunImprovingINT8Accuracy2020} , \cite{vinaOptimizingUltralyticsYOLO2025}. A
 \ref{tab:yolov8_kvantalas}. táblázat mérési eredményei a teljesítmény
 mellett, a GPU (NVIDIA A100) futás időbeli hatalmas különbségekre mutat
 rá, itt is a Microsoft COCO adathalmazon.
 
  \begin{table}[htbp]
 	     \centering
-	     \caption{YOLOv8 és a kvantálás ereje \cite{hussain_yolov5_2024}}
+	     \caption{YOLOv8 és a kvantálás ereje \cite{hussainYOLOv5YOLOv8YOLOv102024}}
 	     \label{tab:yolov8_kvantalas}
 	     \vspace{0.2cm}
 	     \resizebox{\textwidth}{!}{%
@@ -761,7 +761,7 @@ táblázatban szereplő A100 TensorRT futás idő (ms) oszlop értékei, egy
 csúcskategóriás hardveren produkált futásidőket mutatja. Az NVIDIA A100
 Tensor Core GPU kifejezetten adatközpontok számára lettek fejlesztve,
 hogy a mesterséges intelligencia modellek valós időben tudjanak
-működni \cite{nvidia_nvidia_nodate}.
+működni \cite{nvidiaNVIDIAA100Tensor}.
 
 YOLOv10 2024-ben jelent meg, Tsinghua Egyetem kutatói álltal. A fő
 újítása az objektumokhoz tartozó bounding box hozzárendelésben rejlik.
@@ -775,13 +775,13 @@ működést. Ezzel szemben a one-to-one hazarendelés szigorúan egy bounding
 box-ot rendel az objektumokhoz. Ennek előnye, hogy nem kell
 utófeldolgozó NMS algoritmust használni, de a tanítás lassabbá, és
 kevésbé pontossá válik. YOLOv10 ötvözi a one-to-one és a one-to-many
-hozzárendelést, „Consistent Dual Assignments''\cite{wang_yolov10_2024} néven hivatkoznak
-rá \cite{hussain_yolov5_2024}. Ennek az architektúrális változtatásnak a futás béli
+hozzárendelést, „Consistent Dual Assignments''\cite{wangYOLOv10RealTimeEndtoEnd2024} néven hivatkoznak
+rá \cite{hussainYOLOv5YOLOv8YOLOv102024}. Ennek az architektúrális változtatásnak a futás béli
 előnyeit mutatja be a következő \ref{tab:yolov8_v10_comp}. táblázat.
 
  \begin{table}[htbp]
 	     \centering
-	     \caption{YOLOv8 és v10 összehasonlítása \cite{hussain_yolov5_2024}}
+	     \caption{YOLOv8 és v10 összehasonlítása \cite{hussainYOLOv5YOLOv8YOLOv102024}}
 	     \label{tab:yolov8_v10_comp}
 	     \vspace{0.2cm}
 	     \resizebox{\textwidth}{!}{%
@@ -806,15 +806,15 @@ idő, a teljes végrehajtási időt mutatja meg, azaz a gyakorlati
 detektálási időt. Míg a futás idő (ms) oszlop csak a neurális hálózat
 számítását méri, ebből jól látható az utófeldolgozás időbeli plusz
 költségének mértéke. A méréseket NVIDIA T4 GPU-n végezték FP16-os
-kvantálással, a Microsoft COCO adathalmazon \cite{wang_yolov10_2024}. Ebből következik,
+kvantálással, a Microsoft COCO adathalmazon \cite{wangYOLOv10RealTimeEndtoEnd2024}. Ebből következik,
 hogy eltérő mérési értékek szerepelnek, \ref{tab:yolov8_kvantalas}. táblázat és a \ref{tab:yolov8_v10_comp}. táblázat között, YOLOv8 verziók terén.
 
-\subsubsection{Rendelkezésre álló nyílt adathalmazok és versenyek a
-	témában}
+\subsubsection{Rendelkezésre álló nyílt adathalmazok és versenyek a témában} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{rendelkezesre-allo-nyilt-adathalmazok-es-versenyek-a-temaban}
 
 A projektem adatkészlet kiválasztásának szempontrendszere a következő. A
 fejlesztés fókuszában a valós idejű, járműbe szerelt dashcam (fedélzeti
-kamera) videófolyamán alapuló kátyúdetektálás áll. Ebből adódóan olyan
+kamera) videofolyamán alapuló kátyúdetektálás áll. Ebből adódóan olyan
 adathalmazra van szükségem, amely kifejezetten ebből nézőpontból
 rögzített, valós forgalmi szituációkat tartalmazó képekből áll.
 
@@ -825,15 +825,15 @@ ezek jelentős része nem alkalmazható közvetlenül a céljaim eléréséhez.
 Az útfenntartási gyakorlatban széles körben elterjedtek a speciális
 mérőjárművekkel vagy drónokkal, top-down \textbf{(}felülnézetből)
 rögzített adathalmazok, mint például a German Asphalt Pavement Distress
-(GAPs) \cite{wang_yolov10_2024} vagy a Crack500 \cite{yang_feature_2020}. Ezek az adatbázisok kiemelkedő,
+(GAPs) \cite{wangYOLOv10RealTimeEndtoEnd2024} vagy a Crack500 \cite{yangFeaturePyramidHierarchical2020}. Ezek az adatbázisok kiemelkedő,
 pixel szintű pontosságot nyújtanak az aszfalt textúrájának és
 repedéseinek vizsgálatához. De a merőleges képeken nem tudom
 felhasználni mert más perspektívából közelítik meg a problémát.
 
 Az adathalmazok másik jelentős szegmensét az önvezető járművek számára
 készített globális, nagy diverzitású (időjárás, napszak)
-referenciabázisok adják, mint amilyen a Cityscapes \cite{cordts_cityscapes_2016} vagy a
-BDD100K \cite{yu_bdd100k_2020}. Ezek az adathalmazok kiválóak a szemantikus
+referenciabázisok adják, mint amilyen a Cityscapes \cite{cordtsCityscapesDatasetSemantic2016} vagy a
+BDD100K \cite{yuBDD100KDiverseDriving2020}. Ezek az adathalmazok kiválóak a szemantikus
 szegmentációra (például az útfelület, a sávok, a gyalogosok és a
 járművek elkülönítésére). Ugyanakkor nem fókuszálnak a lokális
 úthibákra: nem tartalmaznak dedikált, bounding box ellátott jelöléseket
@@ -842,7 +842,7 @@ kátyúkra vonatkozóan.
 A projekthez leginkább illeszkedő, okostelefonos és fedélzeti kamerás
 felvételekből építkező Road Damage Dataset (RDD) adathalmazokra, illetve
 az ezekhez kapcsolódó globális versenyek (pl. ORDDC) eredményeire fogok
-támaszkodik. \cite{arya_crowdsensing-based_2022}
+támaszkodik. \cite{aryaCrowdsensingbasedRoadDamage2022}
 
 Maeda és munkatársai a 2018-ban publikált kutatásukban a világon
 elsőként hoztak létre egy olyan nagyméretű, publikus adathalmazt, amely
@@ -854,7 +854,7 @@ teljesítménye objektíven összehasonlíthatóvá váljék.
 
 Az „adathalmaz összesen 9 053 darab, valós forgalmi szituációban készült
 képet tartalmaz, amelyeken 15 435 útkárosodást jelöltek meg bounding
-box-okkal''\cite{maeda_road_2018}. A szerzők a hibákat nyolc különböző osztályba
+box-okkal''\cite{maedaRoadDamageDetection2018}. A szerzők a hibákat nyolc különböző osztályba
 sorolták, egy hierarchikus rendszer alapján. A sérüléseket első lépésben
 repedésekre és egyéb hibákra bontották. A repedéseket ezt követően
 finomabb kategóriákra osztották tovább. Az egyéb károsodások kategóriája
@@ -867,7 +867,7 @@ képfeldolgozás területén korábban egyetlen kutatás sem fedte le az
 felbontású felvételeket rendkívül változatos földrajzi helyszíneken és
 eltérő időjárási körülmények között rögzítették, aminek köszönhetően az
 adatkészlet kiemelkedően jól reprezentálja a valós, mindennapi vezetési
-környezetet. \cite{maeda_road_2018}
+környezetet. \cite{maedaRoadDamageDetection2018}
 
 A 2018-as kezdeményezést követően a technológia és az adatigény robbanás
 szerűén megnőtt. Ennek a fejlődésnek a következő nagy mérföldkövét Arya
@@ -877,7 +877,7 @@ kapcsolódó RDD2022 adathalmaz publikálása jelentette. A tanulmány
 rámutat arra, hogy a korábbi rendszerekhez képest több kritikus ponton
 is paradigmaváltás történt az úthiba-detektálásban.
 
-A legszembe tűnőbb változás az adathalmaz mérete és földrajzi
+A legszembetűnőbb változás az adathalmaz mérete és földrajzi
 diverzitása volt. Míg a 2018-as verzió kizárólag Japánra korlátozódott,
 addig a 2022-es adatbázis már hat különböző ország (Japán, India,
 Egyesült Államok, Csehország, Norvégia és Kína) úthálózatát fedi le. A
@@ -906,17 +906,16 @@ detektorok, kiemelten a modern YOLO (You Only Look Once) változatok
 vették át a vezető szerepet. A YOLO modellek az RDD2022 adathalmazon
 kimagasló pontosságot és robusztusságot mutattak, végleg ipari
 sztenderddé válva a fedélzeti kamerás úthiba-detektálás
-területén. \cite{arya_crowdsensing-based_2022}
+területén. \cite{aryaCrowdsensingbasedRoadDamage2022}
 
 A következő ORDDC\textquotesingle2024 kihíváson pontosan ugyanazt az
 RDD2022 nevű adathalmazt használta, amelyet a CRDDC\textquotesingle2022
 verseny során tettek közzé. A technológiai újítás a valós idejű működés
 és a pontosság egyensúlyának megteremtése érdekében a 2024-es év
 kiemelkedő technológiai trendjévé a tudáspárlat, valamint a könnyűsúlyú
-neurális architektúrák alkalmazása vált. \cite{arya_orddc2024_2024}
+neurális architektúrák alkalmazása vált. \cite{aryaORDDC2024StateArt2024}
 
-\subsubsection{\texorpdfstring{ Transfer Learning és fine-tuning a
-		gyakorlatban}{ Transfer Learning és fine-tuning a gyakorlatban}}
+\subsubsection{\texorpdfstring{ Transfer Learning és fine-tuning a gyakorlatban}{ Transfer Learning és fine-tuning a gyakorlatban}}
 
 A gépi tanulás, és különösen a mélytanulás (deep learning) egyik
 legnagyobb kihívása, hogy a modellek sikeres betanításához hatalmas
@@ -929,9 +928,9 @@ kapcsolódó problémára alkalmaznak. A folyamat során a modell egy
 úgynevezett source domain-ból (forrástartományból) származó
 információkat, például egy hatalmas, általános képadatbázison betanított
 hálózat súlyait emel át, egy target domain-ba (céltartományba), ezzel
-drasztikusan csökkentve az új feladat adatigényét.\cite{zhuang_comprehensive_2021}
+drasztikusan csökkentve az új feladat adatigényét.\cite{zhuangComprehensiveSurveyTransfer2021}
 
-Yosinski és kutatótársai \cite{yosinski_how_2014} bizonyították, hogy a konvolúciós
+Yosinski és kutatótársai \cite{yosinskiHowTransferableAre2014} bizonyították, hogy a konvolúciós
 neurális hálózatok (CNN) rétegei hierarchikusan, az általánostól a
 specifikus felé haladva építik fel a vizuális tudásukat. A hálózat
 legelső rétegei univerzális, úgynevezett general jellemzőket tanulnak
@@ -950,11 +949,11 @@ megtartják, rögzítik. Így csak az utolsó, feladatspecifikus rétegeket,
 valamint az osztályozó réteget tanítják újra a saját, kisebb
 adathalmazunkon. Ez a megközelítés lehetővé teszi a modell számára, hogy
 a korábban rögzített álltalános jellemzőkre építve hozzáigazítsa a
-specifikus rétegeket az új problémához. \cite{yosinski_how_2014}
+specifikus rétegeket az új problémához. \cite{yosinskiHowTransferableAre2014}
 
 A transzfertanulás és a finomhangolás együttes alkalmazásával drasztikus
 előnyökre lehet szert tenni a nulláról történő betanítással szemben.
-Zhuang és munkatársai \cite{zhuang_comprehensive_2021} alapján ez három fő teljesítménymutatóban
+Zhuang és munkatársai \cite{zhuangComprehensiveSurveyTransfer2021} alapján ez három fő teljesítménymutatóban
 jelentkezik a tanulási görbén.
 
 Magasabb kezdeti teljesítmény, mivel az előtanított modell már az első
@@ -971,8 +970,7 @@ szinte mindig felülmúlja a nulláról tanított modellekét, még abban az
 esetben is, ha az utóbbiakat végtelen ideig próbálják tanítani a
 rendelkezésre álló korlátozott adathalmazon.
 
-
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{Detektált hibák lokalizálása}
 
@@ -988,7 +986,7 @@ fizikai távolsággá alakítását.
 
 \subsubsection*{Lyukkamera modell}
 
-Szeliski \cite{szeliski_computer_2011} munkája alapján a pinhole (lyukkamera) modell a 3D-s
+Szeliski \cite{szeliskiComputerVisionAlgorithms2011} munkája alapján a pinhole (lyukkamera) modell a 3D-s
 tér és a 2D-s kép közötti leképzés legegyszerűbb geometriai leírása,
 amelyben a fénysugarak egyetlen ponton, a vetítési középponton haladnak
 át, lencsék alkalmazása nélkül. A modell matematikai alapját a hasonló
@@ -1021,13 +1019,13 @@ nem elegendő. A megoldáshoz ahogy Szeliski a geometriai képalkotásról
 szóló fejezetekben tárgyalja elengedhetetlen valamilyen kiegészítő
 geometriai felvetés, információ, például ismert mélység, több
 nézőpontból származó háromszögelés vagy egy ismert síkkal, talajjal való
-metszéspont meghatározása \cite{szeliski_computer_2011}.
+metszéspont meghatározása \cite{szeliskiComputerVisionAlgorithms2011}.
 
 \subsubsection*{Kamera kalibráció}
 
 Richard Szeliski könyve alapján ismertetem a geometriai kamera
 kalibráció folyamatát, amely a számítógépes látás egyik legalapvetőbb
-lépése a 3D-s tér rekonstrukciójához \cite{szeliski_computer_2011}.
+lépése a 3D-s tér rekonstrukciójához \cite{szeliskiComputerVisionAlgorithms2011}.
 
 A geometriai kamera kalibráció az a folyamat, melynek során
 meghatározzuk a kamera belső geometriai és optikai tulajdonságait,
@@ -1073,18 +1071,16 @@ matematikai transzformációt, amely lehetővé teszi, hogy a torzított,
 perspektivikus 2D képekből visszanyerhető legyen a 3D-s tér
 geometriailag helyes szerkezetét.
 
-\subsubsection{Geometriai
-	transzformációk}
+\subsubsection{Geometriai transzformációk}
 
-\subsubsection*{Inverse perspective
-	mapping}
+\subsubsection*{Inverse perspective mapping}
 
 Az inverse perspective mapping (IPM, inverz perspektív leképezés) egy
 geometriai transzformáció, amelynek célja a kamera által rögzített képen
 jelentkező perspektív hatás megszüntetése. Az IPM a kamera kép származó
 információkat használja fel egy felülnézeti, „bird's eye view''
 (madártávlati) kép létrehozásához, ahol a perspektívahatások nincsenek
-jelen \cite{bertozz_stereo_1998}, \cite{oliveira_multimodal_2015}.
+jelen \cite{bertozzStereoInversePerspective1998}, \cite{oliveiraMultimodalInversePerspective2015}.
 
 Alkalmazása ADAS rendszerekben és sávészlelés Az IPM kritikus szerepet
 játszik az advanced driver assistance systems (ADAS, fejlett
@@ -1097,9 +1093,9 @@ maradnak, függetlenül a távolságtól.
 A módszer gyenge pontja a síkút feltételezés. Amennyiben az út felülete
 nem sík például emelkedők, lejtők vagy kátyúk, egyenetlenségek esetén, a
 geometriai feltételezés sérül, ami a transzformált képen torzításokat
-eredményez \cite{oliveira_multimodal_2015}.
+eredményez \cite{oliveiraMultimodalInversePerspective2015}.
 
-A projektem kapcsán az IPM használható lehet a perspektí torzítás
+A projektem kapcsán az IPM használható lehet a perspektív torzítás
 kiküszöbölésére. Ebből adódóan akár a sáv szelességééhez is mérhetném a
 detektált kátyú oldalirányú pozícióját. Persze ehhez az úton lévő
 sávelválasztó felfestéseket is detektálnom kellene.
@@ -1111,7 +1107,7 @@ távolságbecslési algoritmust mutat be az ütközésre figyelmeztető (FCW)
 és automatikus vészfékező (AEB) rendszerek pontosságának javítása
 érdekében. A szerzők a lyukkamera modellre alapozva két párhuzamos
 részmódszert dolgoztak ki a céljármű szélességének, és ezáltal
-távolságának meghatározására \cite{han_vehicle_2016}.
+távolságának meghatározására \cite{hanVehicleDistanceEstimation2016}.
 
 Tehát van egy jármű, amibe egy kamera van szerelve és veszi a
 környezetet beleértve a céljárművet, a céljármű az, ami a kamerás autó
@@ -1157,3 +1153,83 @@ sávszélességhez történő viszonyítás pontosságát. Noha a szerzők nem
 kátyúk lokalizációját, hanem a céljármű távolságának meghatározását
 tárgyalják, az ismertetett eljárást kifejezetten hasznosnak ítéltem a
 távolságbecslés alapelveinek megértéséhez.
+
+\subsection{Nyílt forráskódú szimulációs környezetek}
+
+A fejlett vezetéstámogató rendszerek és a önvezető járművek validációja során a szimulációs környezetek alkalmazása megkerülhetetlenné vált. Ugyanis a hagyományos, nyílt közutakon zajló tesztek túlságosan drágák, sok időt emésztenek fel, és komoly balesetvédelmi, illetve etikai aggályokat vetnek fel. A virtuális tesztkörnyezetek legnagyobb előnye abban rejlik, hogy gazdaságos és a résztvevőkre nézve teljesen kockázatmentes módon teszik lehetővé a legszélsőségesebb, ritkán előforduló közlekedési forgatókönyvek korlátlan, megismételhetőségét. Fő hátrányként említhető, hogy a virtuális szenzorok zajait, a sűrű forgalom kiszámíthatatlanságát és a komplex emberi viselkedést, valamint a fizikai mozgásokat imitáló hardveres visszacsatolásokat jelenleg még nem lehet tökéletesen leképezni, ezáltal a szimulátoros vizsgálatok önmagukban sosem képesek maradéktalanul kiváltani a valódi járművekkel végzett utcai teszteket.\cite{nezhadDrivingSimulatorsAutonomous}
+ 
+\subsubsection{CARLA}
+
+A CARLA (Car Learning to Act) az Unreal Engine 4-re épülő, nyílt forráskódú városi vezetési szimulátor, amelyet Dosovitskiy fejlesztett ki kifejezetten az önvezető rendszerek betanítására és validálására. Játékmotorként az Unreal Engine 4 fotorealisztikus renderelést és rugalmas környezetszerkesztést biztosít \cite{dosovitskiyCARLAOpenUrban2017}. A szenzorkészlet kiemelkedő, RGB és mélységi kamera, LIDAR, radar, GPS, IMU, valamint szemantikai szegmentációs kamera egyaránt konfigurálható \cite{SensorsReferenceCARLA}. A szenzorok adatfolyamai lekérdezhetőek Python, illetve C++ API-n keresztül, teljes ROS2-integrációval \cite{PythonAPICARLA, ReferenceCARLASimulator}. Hátránya, hogy ,,az alapértelmezett PhysX fizikai modellje nem produkál konzisztens dinamikai viselkedést'' \cite{jiIntegrationValidationTrucksim2026}. Így az út egyenetlenségből fakadó futóműreakciók és az ebből eredő kameraképmozgás modellezése szempontjából nem tűnik ideálisnak számomra.
+
+\subsubsection{BeamNG.tech}
+
+A BeamNG.tech a BeamNG GmbH által fejlesztett ADAS és önvezető jármű kutató platform, amelynek alapja egy saját fejlesztésű soft-body fizika motor, az úgynevezett mass-spring (tömeg-rugó) modellen alapul. Ez a megoldás csomópontokból és a köztük feszülő, rugalmas kötésekből álló hálózattal nagy pontossággal képes szimulálni a járművek valós idejű deformálódását, roncsolódását, a guminyomást, valamint az aerodinamikai hatásokat. Szenzorok terén elérhetőek a következők, LIDAR, IMU, ultrahang, illetve normál RGB, mélységérzékelős vagy szemantikusan szegmentált képeket adó kamerák. A rendszerrel való kommunikációt elsősorban a BeamNGpy nevű, nyílt forráskódú Python API biztosítja. A keretrendszer kiemelkedő előnye a valósághű fizikai pontosság, amellyel biztonságkritikus és extrém helyzetek (például karambolok vagy defektek) is hitelesen szimulálhatóak. \cite{gambiSoftbodySimulationProcedural} \cite{maulBeamNGtechTechnicalPaper}
+
+\subsection{Szintetikus kátyú és teszt pálya generálás}
+
+\subsubsection{3D modellezés}
+
+A 3D modellek felépítés három technika szerint valósítható meg, a hagyományos formális, procedurális, és a rekonstrukciós valós nyers adatokból.
+
+A hagyományos esetben egy 3D szerkesztőprogramon (például: Blender) belül meglévő mesh grid-ek (rácshálózatok) csúcspontjainak térbeli eltolása. Például egy úton lévő kátyú esetén ahogy a \ref{fig:katyu_blender}. ábrán látható. A 3D modellezésekor a sík felület bizonyos csúcspontjait kijelölve egy csoportba foglalják, majd lefelé tolják a térben, kráterszerű mélyedést hozva létre. \cite{kcCyberPotholesPotholeDefect2024}
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.6\textwidth]{img/abra5.png} 
+	\caption{3D kátyú modell készítés Blenderben \cite{kcCyberPotholesPotholeDefect2024}}
+	\label{fig:katyu_blender}
+\end{figure}
+
+Ezzel szemben a procedurális technikánál nem manuálisan, egy 3D-s szerkesztőprogramon keresztül  történik a modellezés, hanem program kódból, matematikai algoritmusok, szabályok és vizuális csomópontok használatával. A módszer további előnye a szerkesztési idő csökkentése mellett a változatosság, randomizálhatóság azaz képes nagy mennyiségű és sokféle 3D-s tartalmat előállítani. \cite{carliSurveyProceduralContent2011}
+
+A valós adatokból (például: kameraképekből vagy lézerszkennerekből) történő 3D rekonstrukció módszertana egy több lépcsős folyamat, amelynek felépítése során a kinyert és párosított képi jellemzőkből először egy ritka, majd a kameramozgások becslésével egy sűrű pontfelhőt generálnak, amit végül zajszűréssel és szegmentálással megtisztítva alakítanak át háromszöghálós vagy geometriai modellekké. A technológia előnye, hogy a modern algoritmusok révén nagyrészt automatizálható rendkívül részletgazdag. Ugyanakkor jelentős hátránya, hogy a terepi nyers adatok begyűjtése időigényes, drága és sokszor balesetveszélyes feladat. \cite{maReview3DReconstruction2018}
+
+\subsubsection{Decals (matricák)}
+
+A decal-ok (matricák) lokálisan paraméterezett, kétdimenziós textúrák, amelyeket digitális matricákként illesztenek a 3D-s objektumok felületére a részletgazdag textúrázás és a vizuális effektek dinamikus megjelenítése céljából. A matricák elsődleges szerepe a fotorealisztikus és komplex felületi részletek gyors, erőforrás kímélő kialakítása, mint amilyenek az apró részletek (például szőrzet, arcvonások) vagy a 2D-s vektoros grafikai elemek és feliratok felvitele a térbeli modellekre \cite{schmidtInteractiveDecalCompositing2006}. Modern szimulátorokban (például autonóm járművek tesztelésénél) emellett kiemelkedő szerepet kapnak a dinamikus és hiteles környezeti tényezők ábrázolásában is, ugyanis segítségükkel a pályára vetítve valósághűen szimulálhatóak az olyan időjárási viszonyok, mint az aszfalton lévő hó, eső, és a por \cite{turkcanBoundlessGeneratingPhotorealistic2024}.
+
+A globális paraméterezés során a teljes 3D-s modellt vagy annak egy nagy, összefüggő darabját, egyetlen átfogó, 2D-s koordinátarendszerbe képezik le. Ezzel szemben a lokálisan paraméterezett matricák esetén a 3D-s felületnek csupán egy apró, specifikus részét képezi le egy adott középpont és egy meghatározott sugár alapján, teljesen függetlenül a modell többi részétől. Tehát a decalok függetlenek a 3D modell egészének globális paraméterezésétől, így bármilyen felületen rá ragaszthatóak. Az elhelyezési folyamat egy úgynevezett diszkrét exponenciális leképezésen alapul. A matrica pozicionálásához csupán egy kezdőpont, egy orientációs irány és egy geodéziai sugár meghatározására van szükség. A technológia legnagyobb előnye, hogy a komplex 3D-s felületek textúrázását a 2D-s grafikai szoftverekből jól ismert egyszerűséggel teszi lehetővé, ami nagymértékben megkönnyíti a grafikai elemek mozgatását, másolását, beillesztését és többszöri újrahasznosítását egyetlen modellen belül. \cite{schmidtInteractiveDecalCompositing2006}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

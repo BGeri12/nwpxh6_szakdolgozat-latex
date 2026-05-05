@@ -6,18 +6,15 @@
 A projektem célja, hogy egy az autóra elejére, a szélvédő mögé és a
 visszapillantó tükör közelében rögzített, monokuláris kamera
 felviteléből, miközben az autó mozog az úton, a kamera származó
-videófolyamot feldolgozva, a képkockákon lévő kátyúkat felismerni,
-detektálni (képen lévő helyüket bekeretezni). A kátyú detektálását
-követően azok pontosabb helyének meghatározása az autó orrához képest.
-Ez alatt azt értem, hogy a kamerakép 2D koordináta rendszeréből a 3D
-világ koordináta rendszerébe való konverziót. A lyukkamera modellre
+videofolyamot feldolgozva, a képkockákon lévő kátyúkat felismerni,
+detektálni (képen lévő helyüket bekeretezni).A kátyú detektálását követő lépés azok gépjárműhöz viszonyított, valós metrikus térbeli pozíciójának meghatározása. Ennek során a rendszer a kamerakép 2D-s koordinátáit valós, méterben kifejezett fizikai értékekké transzformálja, meghatározva ezzel a hibahely pontos oldalirányú távolságát. A lyukkamera modellre
 építve, szeretném meghatározni a kátyú oldalirányú pozícióját az úton
 belül, a felvételt készítő autóhoz képest. Mindezt valós időben, azaz
 miközben a jármű előrefelé halad az úton a szoftvernek az autó előtti
 területet kell vizsgálnia, és előre detektálni a kátyúkat és azok
 oldalirányú pozícióit, mielőtt az autó oda érne a kátyús útszakasz
 részhez. Tehát egyfajta szoftveres előre tekintés az úton, ami nem a
-lámpákat, közlekedési táblákat és nem a felfestéseket figyeli
+lámpákat, közlekedési táblákat és nem a felfestéseket figyeli az
 útburkolaton, hanem az úthibákat, azon belül is kifejezetten a kátyúkra
 fókuszál.
 
@@ -42,14 +39,12 @@ motivációt adja a projekthez.
 \subsubsection{Elérhető funkciók
 részletesen}\label{eluxe9rhetux151-funkciuxf3k-ruxe9szletesen}
 
-\paragraph{Videófolyam feldolgozás és
-előfeldolgozás}\label{videuxf3folyam-feldolgozuxe1s-uxe9s-elux151feldolgozuxe1s}
-
-A rendszer belépési pontja a valós idejű képfeldolgozó modul, amely a
+Videofolyam feldolgozás és
+előfeldolgozás, a rendszer belépési pontja a valós idejű képfeldolgozó modul, amely a
 szélvédő mögött elhelyezett monokuláris kamera jelét fogadja.
 
 Első lépésben a szoftver folyamatosan olvassa és digitalizálja a kamera
-által biztosított 2D videófolyamot. A feldolgozási lánc biztosítja, hogy
+által biztosított 2D videofolyamot. A feldolgozási lánc biztosítja, hogy
 a rendszer képes legyen tartani a bemeneti forrás sebességét
 (szinkronizált 30 FPS), ezáltal garantálva a folyamatos, akadozásmentes
 működést nagy sebességű haladás esetén is.
@@ -59,10 +54,8 @@ végez az egyes képkockákon, hogy a nappali, természetes fényviszonyok
 mellett a lehető legkontrasztosabb képet biztosítsa a kátyúk
 körvonalainak kiemeléséhez.
 
-\paragraph{Kátyú detektálás, objektum
-felismerés}\label{kuxe1tyuxfa-detektuxe1luxe1s-objektum-felismeruxe9s}
-
-Ez a modul a rendszer szeme, amely a vizuális információk értelmezéséért
+Kátyú detektálás, objektum
+felismerés modul a rendszer szeme, amely a vizuális információk értelmezéséért
 felelős, gépi tanulás segítségével.
 
 A szoftver képes azonosítani az aszfaltozott útfelületen felszínen
@@ -78,13 +71,11 @@ pásztázva, már 30 méteres távolságból azonosítsa a potenciális
 veszélyforrásokat. Ez az előre tekintés biztosítja a szükséges
 reakcióidőt a sofőr vagy egy későbbi autonóm rendszer számára.
 
-\paragraph{\texorpdfstring{ Térbeli Lokalizáció és
-Koordináta-transzformáció}{ Térbeli Lokalizáció és Koordináta-transzformáció}}\label{tuxe9rbeli-lokalizuxe1ciuxf3-uxe9s-koordinuxe1ta-transzformuxe1ciuxf3}
-
-A rendszer legfontosabb matematikai modulja, amely a detektált
+ Térbeli Lokalizáció és
+Koordináta-transzformáció a rendszer legfontosabb matematikai modulja, amely a detektált
 objektumokat elhelyezi a valós térben a járműhöz viszonyítva.
 
-2D-ből 3D transzformációhoz a lyukkamera-modell (pinhole camera model)
+2D-ből 3D transzformációhoz a lyukkamera-modell
 matematikai összefüggéseit alkalmazva a szoftver a sík képi
 koordinátákat átkonvertálja a 3D világkoordináta rendszerbe. Ez a
 számítás teszi lehetővé, hogy a képernyőn látott foltból valós fizikai
@@ -96,25 +87,12 @@ detektált kátyú oldalirányú elhelyezkedését a jármű hossztengelyéhez
 megadja, az autó nyomtávjához viszonyítva hol helyezkedik el a kátyú az
 úton.
 
-\paragraph{Valós Idejű Vizualizáció (Ember-Gép
-Interfész)}\label{valuxf3s-idejux171-vizualizuxe1ciuxf3-ember-guxe9p-interfuxe9sz}
-
-A szoftver vizuális visszajelzést biztosít a feldolgozás eredményéről.
-Kiterjesztett valóság jelleggel, a futtató eszköznek (laptop) a
-kijelzőjén megjeleníti az élő videóképet grafikus határoló keretekkel
-(bounding box) jelöli meg a detektált kátyúkat. A határoló dobozok
-mellett a rendszer szöveges formában, valós időben megjeleníti a
-\hyperref[tuxe9rbeli-lokalizuxe1ciuxf3-uxe9s-koordinuxe1ta-transzformuxe1ciuxf3]{3.1.2.3}
-pontban számított távolság adatokat. Ez lehetővé teszi a rendszer
-működésének azonnali ellenőrzését működés közben.
-
 \subsection{Követelmények}\label{kuxf6vetelmuxe9nyek}
 
 \subsubsection{Követelmények
 kifejtve}\label{kuxf6vetelmuxe9nyek-kifejtve}
 
-\paragraph{Funkcionális
-követelmények}\label{funkcionuxe1lis-kuxf6vetelmuxe9nyek}
+Funkcionális követelmények:
 
 Ezen követelmények határozzák meg a rendszer alapvető működési
 mechanizmusait, a bemeneti adatok kezelésétől kezdve a feldolgozáson át
@@ -161,8 +139,7 @@ irányváltással járó éles kanyarokat, mivel ezekben az esetekben a
 kamerakép és a járműmozgás vektora közötti korreláció jelentősen eltér a
 modell feltételezéseitől.
 
-\paragraph{Minőségi
-követelmények}\label{minux151suxe9gi-kuxf6vetelmuxe9nyek}
+Minőségi követelmények:
 
 A minőségi követelmények definiálják azokat a teljesítménymutatókat és
 korlátokat, amelyeken belül a funkcionális követelményeknek teljesülniük
@@ -208,8 +185,7 @@ időjárási körülmények (köd, szakadó eső, havas táj) kezelésére.
 \subsubsection{\texorpdfstring{Követelmények felsorolás jelleggel
 }{Követelmények felsorolás jelleggel }}\label{kuxf6vetelmuxe9nyek-felsoroluxe1s-jelleggel}
 
-\paragraph{Funkcionális
-követelmények}\label{funkcionuxe1lis-kuxf6vetelmuxe9nyek-1}
+Funkcionális követelmények:
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -229,8 +205,7 @@ követelmények}\label{funkcionuxe1lis-kuxf6vetelmuxe9nyek-1}
   nem.
 \end{enumerate}
 
-\paragraph{Minőségi
-követelmények}\label{minux151suxe9gi-kuxf6vetelmuxe9nyek-1}
+Minőségi követelmények:
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
